@@ -1,0 +1,19 @@
+#Project info
+author=Zeitheron
+start_git_commit=d788f3cdb46c0648881b248e5d8f29fa8b2acff4
+git_commit=https://github.com/Zeitheron/ExpandedEquivalence/commit/{{hash}}
+
+#Runtime info
+forge_version=14.23.2.2611
+minecraft_version=1.12.2
+mcp=snapshot_20170624
+hc_version=1.9.9.8
+jei_version=4.8.5.159
+
+#Mod info
+mod_id=expequiv
+mod_id_fancy=ExpandedEquivalence
+mod_name=Expanded Equivalence
+mod_version=1b
+cf_project=0
+release_type=beta
