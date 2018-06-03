@@ -31,7 +31,12 @@ public class ExpansionActuallyAdditions extends Expansion
 	@Override
 	public void preInit(Configuration c)
 	{
-		
+		canolaCost = c.getInt("Canola", "EMC", canolaCost, 0, Integer.MAX_VALUE, "Base cost for Canola");
+		coffeCost = c.getInt("CoffeBeans", "EMC", coffeCost, 0, Integer.MAX_VALUE, "Base cost for Coffe Beans");
+		riceCost = c.getInt("Rice", "EMC", riceCost, 0, Integer.MAX_VALUE, "Base cost for Rice");
+		batWingsCost = c.getInt("BatWings", "EMC", batWingsCost, 0, Integer.MAX_VALUE, "Base cost for Bat's Wings");
+		solidXPCost = c.getInt("SolidifiedXP", "EMC", solidXPCost, 0, Integer.MAX_VALUE, "Base cost for Solidified Expirience");
+		blackQuartzOreCost = c.getInt("BlackQuartzOre", "EMC", blackQuartzOreCost, 0, Integer.MAX_VALUE, "Base cost for Black Quartz Ore");
 	}
 	
 	@Override

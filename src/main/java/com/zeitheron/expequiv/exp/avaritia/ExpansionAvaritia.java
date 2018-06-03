@@ -26,7 +26,7 @@ public class ExpansionAvaritia extends Expansion
 	@Override
 	public void preInit(Configuration c)
 	{
-		neutronPileCost = c.getInt("NeutronPile", "", neutronPileCost, 0, Integer.MAX_VALUE, "Base cost for Pile of Neutrons");
+		neutronPileCost = c.getInt("NeutronPile", "EMC", neutronPileCost, 0, Integer.MAX_VALUE, "Base cost for Pile of Neutrons");
 	}
 	
 	@Override

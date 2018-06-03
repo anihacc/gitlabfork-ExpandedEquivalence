@@ -58,6 +58,8 @@ public abstract class Expansion
 			for(Class<? extends Expansion> c : classes)
 				try
 				{
+					ExpandedEquivalence.LOG.info("Creating expansion " + c.getName() + " for mod " + modid + " (" + Loader.instance().getIndexedModList().get(modid).getName() + ")");
+					
 					Constructor<? extends Expansion> exp = c.getConstructor(String.class, Configuration.class, Object[].class);
 					exp.setAccessible(true);
 					
@@ -67,7 +69,7 @@ public abstract class Expansion
 					File cfgFile = new File(subMod, c.getSimpleName() + ".cfg");
 					Configuration cfg = new Configuration(cfgFile);
 					Expansion ex = exp.newInstance(modid, cfg, args);
-					boolean b = ex.getConfig().getBoolean("Enabled", "", true, "Enable this part of ExpandedEquivalence");
+					boolean b = ex.getConfig().getBoolean("Enabled", "Base", true, "Enable this part of ExpandedEquivalence");
 					if(cfg.hasChanged())
 						cfg.save();
 					if(b)

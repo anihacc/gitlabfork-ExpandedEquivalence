@@ -24,10 +24,10 @@ public class ExpansionMinecraft extends Expansion
 	@Override
 	public void preInit(Configuration c)
 	{
-		dragonBreathCost = c.getInt("DragonBreath", "", dragonBreathCost, 0, Integer.MAX_VALUE, "Base cost for Dragon's Breath");
-		expBottleCost = c.getInt("XPBottle", "", expBottleCost, 0, Integer.MAX_VALUE, "Base cost for Bottle o' Enchanting");
-		elytraCost = c.getInt("Elytra", "", elytraCost, 0, Integer.MAX_VALUE, "Base cost for Elytra");
-		totemCost = c.getInt("TotemOfUndying", "", totemCost, 0, Integer.MAX_VALUE, "Base cost for Totem of Undying");
+		dragonBreathCost = c.getInt("DragonBreath", "EMC", dragonBreathCost, 0, Integer.MAX_VALUE, "Base cost for Dragon's Breath");
+		expBottleCost = c.getInt("XPBottle", "EMC", expBottleCost, 0, Integer.MAX_VALUE, "Base cost for Bottle o' Enchanting");
+		elytraCost = c.getInt("Elytra", "EMC", elytraCost, 0, Integer.MAX_VALUE, "Base cost for Elytra");
+		totemCost = c.getInt("TotemOfUndying", "EMC", totemCost, 0, Integer.MAX_VALUE, "Base cost for Totem of Undying");
 	}
 	
 	@Override

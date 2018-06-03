@@ -1,6 +1,6 @@
 #Project info
 author=Zeitheron
-start_git_commit=d788f3cdb46c0648881b248e5d8f29fa8b2acff4
+start_git_commit=415980b6bbb3ed9b27b022489bf10685ed1a856c
 git_commit=https://github.com/Zeitheron/ExpandedEquivalence/commit/{{hash}}
 
 #Runtime info
@@ -15,5 +15,5 @@ mod_id=expequiv
 mod_id_fancy=ExpandedEquivalence
 mod_name=Expanded Equivalence
 mod_version=1b
-cf_project=0
+cf_project=295222
 release_type=beta
