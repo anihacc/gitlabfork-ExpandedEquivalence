@@ -35,15 +35,12 @@ public class ExpansionDraconicEvolution extends Expansion
 	public int dragonHeartCost = 139_264;
 	public int chaosShardCost = 1_024_000;
 	
-	public Configuration configs;
-	
 	@Override
 	public void preInit(Configuration c)
 	{
-		configs = c;
-		draconiumDustCost = c.getInt("DraconiumDust", "Costs", draconiumDustCost, 1, Integer.MAX_VALUE, "Base cost for Draconium Dust");
-		dragonHeartCost = c.getInt("DragonHeart", "Costs", dragonHeartCost, 1, Integer.MAX_VALUE, "Base cost for Dragon Heart");
-		chaosShardCost = c.getInt("ChaosShard", "Costs", chaosShardCost, 1, Integer.MAX_VALUE, "Base cost for Chaos Shard");
+		draconiumDustCost = c.getInt("DraconiumDust", "", draconiumDustCost, 0, Integer.MAX_VALUE, "Base cost for Draconium Dust");
+		dragonHeartCost = c.getInt("DragonHeart", "", dragonHeartCost, 0, Integer.MAX_VALUE, "Base cost for Dragon Heart");
+		chaosShardCost = c.getInt("ChaosShard", "", chaosShardCost, 0, Integer.MAX_VALUE, "Base cost for Chaos Shard");
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package com.zeitheron.expequiv.exp.draconicevolution;
+package com.zeitheron.expequiv.exp.avaritia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,28 +10,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.brandon3055.draconicevolution.api.fusioncrafting.FusionRecipeAPI;
-import com.brandon3055.draconicevolution.api.fusioncrafting.IFusionRecipe;
-import com.brandon3055.draconicevolution.api.itemupgrade.FusionUpgradeRecipe;
-import com.brandon3055.draconicevolution.lib.ToolUpgradeRecipe;
-
+import morph.avaritia.recipe.AvaritiaRecipeManager;
+import morph.avaritia.recipe.extreme.IExtremeRecipe;
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
 import moze_intel.projecte.emc.json.NSSFake;
 import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 
-class FusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
+class ExtremeEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 {
-	private final List<IRecipeMapper> recipeMappers = Arrays.asList(new DERecipeMapper());
+	private final List<IRecipeMapper> recipeMappers = Arrays.asList(new AXRecipeMapper());
 	private final Set<Class> canNotMap = new HashSet<Class>();
 	private final Map<Class, Integer> recipeCount = new HashMap<Class, Integer>();
 	
@@ -40,10 +34,10 @@ class FusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 	{
 		this.recipeCount.clear();
 		this.canNotMap.clear();
-		block2: for(IFusionRecipe recipe : FusionRecipeAPI.getRecipes())
+		block2: for(IExtremeRecipe recipe : AvaritiaRecipeManager.EXTREME_RECIPES.values())
 		{
 			boolean handled = false;
-			ItemStack recipeOutput = recipe.getRecipeOutput(ItemStack.EMPTY);
+			ItemStack recipeOutput = recipe.getRecipeOutput();
 			if(recipeOutput.isEmpty())
 				continue;
 			NormalizedSimpleStack recipeOutputNorm = NSSItem.create(recipeOutput);
@@ -101,13 +95,13 @@ class FusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 	@Override
 	public String getName()
 	{
-		return "DEFusionMapper";
+		return "ARExtremeMapper";
 	}
 	
 	@Override
 	public String getDescription()
 	{
-		return "Add Conversions for fusion recipes";
+		return "Add Conversions for extreme recipes";
 	}
 	
 	@Override
@@ -116,28 +110,28 @@ class FusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		return true;
 	}
 	
-	private static class DERecipeMapper implements IRecipeMapper
+	private static class AXRecipeMapper implements IRecipeMapper
 	{
-		private DERecipeMapper()
+		private AXRecipeMapper()
 		{
 		}
 		
 		@Override
 		public String getName()
 		{
-			return "DERecipeMapper";
+			return "AXRecipeMapper";
 		}
 		
 		@Override
 		public String getDescription()
 		{
-			return "Maps `IFusionRecipe` crafting recipes";
+			return "Maps `IExtremeRecipe` crafting recipes";
 		}
 		
 		@Override
-		public boolean canHandle(IFusionRecipe recipe)
+		public boolean canHandle(IExtremeRecipe recipe)
 		{
-			return !(recipe instanceof ToolUpgradeRecipe) && !(recipe instanceof FusionUpgradeRecipe);
+			return true;
 		}
 	}
 	
@@ -159,47 +153,26 @@ class FusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		
 		public String getDescription();
 		
-		public boolean canHandle(IFusionRecipe var1);
+		public boolean canHandle(IExtremeRecipe var1);
 		
-		default public Iterable<CraftingIngredients> getIngredientsFor(IFusionRecipe recipe)
+		default public Iterable<CraftingIngredients> getIngredientsFor(IExtremeRecipe recipe)
 		{
 			ArrayList<Iterable<ItemStack>> variableInputs = new ArrayList<Iterable<ItemStack>>();
 			ArrayList<ItemStack> fixedInputs = new ArrayList<ItemStack>();
-			fixedInputs.add(recipe.getRecipeCatalyst());
-			for(Object recipeItem : recipe.getRecipeIngredients())
+			for(Ingredient recipeItem : recipe.getIngredients())
 			{
-				if(recipeItem instanceof Ingredient)
+				ItemStack[] matches = recipeItem.getMatchingStacks();
+				if(matches.length == 1)
 				{
-					ItemStack[] matches = ((Ingredient) recipeItem).getMatchingStacks();
-					if(matches.length == 1)
-					{
-						fixedInputs.add(matches[0].copy());
-						continue;
-					}
-					if(matches.length <= 0)
-						continue;
-					LinkedList<ItemStack> recipeItemOptions = new LinkedList<ItemStack>();
-					for(ItemStack option : matches)
-						recipeItemOptions.add(option.copy());
-					variableInputs.add(recipeItemOptions);
-				} else if(recipeItem instanceof String)
-				{
-					NonNullList<ItemStack> matches = OreDictionary.getOres((String) recipeItem);
-					if(matches.size() == 1)
-					{
-						fixedInputs.add(matches.get(0).copy());
-						continue;
-					}
-					if(matches.size() <= 0)
-						continue;
-					LinkedList<ItemStack> recipeItemOptions = new LinkedList<ItemStack>();
-					for(ItemStack option : matches)
-						recipeItemOptions.add(option.copy());
-					variableInputs.add(recipeItemOptions);
-				} else if(recipeItem instanceof Item)
-					variableInputs.add(new LinkedList<>(Arrays.asList(new ItemStack((Item) recipeItem))));
-				else if(recipeItem instanceof Block)
-					variableInputs.add(new LinkedList<>(Arrays.asList(new ItemStack((Block) recipeItem))));
+					fixedInputs.add(matches[0].copy());
+					continue;
+				}
+				if(matches.length <= 0)
+					continue;
+				LinkedList<ItemStack> recipeItemOptions = new LinkedList<ItemStack>();
+				for(ItemStack option : matches)
+					recipeItemOptions.add(option.copy());
+				variableInputs.add(recipeItemOptions);
 			}
 			return Collections.singletonList(new CraftingIngredients(fixedInputs, variableInputs));
 		}

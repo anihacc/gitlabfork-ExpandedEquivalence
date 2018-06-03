@@ -1,5 +1,6 @@
 package com.zeitheron.expequiv.exp;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,16 +12,12 @@ import javax.annotation.Nullable;
 
 import com.zeitheron.expequiv.ExpandedEquivalence;
 
-import moze_intel.projecte.api.ProjectEAPI;
-import moze_intel.projecte.api.event.EMCRemapEvent;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
-import moze_intel.projecte.impl.EMCProxyImpl;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public abstract class Expansion
 {
@@ -28,19 +25,13 @@ public abstract class Expansion
 	
 	public final String modid;
 	public final Object[] args;
-	private Configuration config;
+	private final Configuration config;
 	
 	public Expansion(String modid, Configuration config, Object[] args)
 	{
 		this.config = config;
 		this.args = args;
 		this.modid = modid;
-	}
-	
-	public void setConfig(Configuration config)
-	{
-		if(config == null)
-			this.config = config;
 	}
 	
 	public Configuration getConfig()
@@ -57,7 +48,7 @@ public abstract class Expansion
 			exps.add(cl);
 	}
 	
-	public static List<Expansion> createExpansionList(Object... args)
+	public static List<Expansion> createExpansionList(File dir, Object... args)
 	{
 		List<Expansion> exps = new ArrayList<>();
 		List<String> loadedMods = EXPANSIONS.keySet().stream().filter(Loader::isModLoaded).collect(Collectors.toList());
@@ -69,7 +60,18 @@ public abstract class Expansion
 				{
 					Constructor<? extends Expansion> exp = c.getConstructor(String.class, Configuration.class, Object[].class);
 					exp.setAccessible(true);
-					exps.add(exp.newInstance(modid, null, args));
+					
+					File subMod = new File(dir, modid);
+					if(!subMod.isDirectory())
+						subMod.mkdir();
+					File cfgFile = new File(subMod, c.getSimpleName() + ".cfg");
+					Configuration cfg = new Configuration(cfgFile);
+					Expansion ex = exp.newInstance(modid, cfg, args);
+					boolean b = ex.getConfig().getBoolean("Enabled", "", true, "Enable this part of ExpandedEquivalence");
+					if(cfg.hasChanged())
+						cfg.save();
+					if(b)
+						exps.add(ex);
 				} catch(Throwable err)
 				{
 					ExpandedEquivalence.LOG.error("Failed to create new expansion instance for class " + c.getName(), err);

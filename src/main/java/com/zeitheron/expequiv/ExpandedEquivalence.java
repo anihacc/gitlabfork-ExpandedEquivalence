@@ -1,7 +1,6 @@
 package com.zeitheron.expequiv;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,23 +16,10 @@ import com.zeitheron.expequiv.exp.ExpansionReg;
 
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.event.EMCRemapEvent;
-import moze_intel.projecte.emc.EMCMapper;
-import moze_intel.projecte.emc.SimpleGraphMapper;
-import moze_intel.projecte.emc.SimpleStack;
-import moze_intel.projecte.emc.arithmetics.HiddenFractionArithmetic;
-import moze_intel.projecte.emc.collector.DumpToFileCollector;
 import moze_intel.projecte.emc.collector.IMappingCollector;
-import moze_intel.projecte.emc.collector.IntToFractionCollector;
-import moze_intel.projecte.emc.collector.WildcardSetValueFixCollector;
-import moze_intel.projecte.emc.generators.FractionToIntGenerator;
-import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
-import moze_intel.projecte.emc.mappers.SmeltingMapper;
-import moze_intel.projecte.emc.pregenerated.PregeneratedEMC;
 import moze_intel.projecte.impl.EMCProxyImpl;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -46,7 +32,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.oredict.OreDictionary;
 
 @Mod(modid = InfoEE.MOD_ID, name = InfoEE.MOD_NAME, version = InfoEE.MOD_VERSION, certificateFingerprint = "4d7b29cd19124e986da685107d16ce4b49bc0a97", dependencies = "required-after:hammercore;required-after:projecte")
 public class ExpandedEquivalence
@@ -73,7 +58,6 @@ public class ExpandedEquivalence
 	{
 		// Register expansions either under FMLConstructionEvent or annotate
 		// with @ExpansionReg
-		SmeltingMapper.class.getName();
 	}
 	
 	@EventHandler
@@ -105,20 +89,16 @@ public class ExpandedEquivalence
 		if(!cfgsDir.isDirectory())
 			cfgsDir.mkdirs();
 		
-		expansions = Expansion.createExpansionList(InfoEE.MOD_ID, InfoEE.MOD_NAME, InfoEE.MOD_VERSION);
-		expansions.forEach(MinecraftForge.EVENT_BUS::register);
+		expansions = Expansion.createExpansionList(cfgsDir, InfoEE.MOD_ID, InfoEE.MOD_NAME, InfoEE.MOD_VERSION);
+		
 		expansions.forEach(ex ->
 		{
-			File subMod = new File(cfgsDir, ex.modid);
-			if(!subMod.isDirectory())
-				subMod.mkdir();
-			File cfgFile = new File(subMod, ex.getClass().getSimpleName() + ".cfg");
-			Configuration cfg = new Configuration(cfgFile);
-			ex.setConfig(cfg);
-			ex.preInit(cfg);
-			if(cfg.hasChanged())
-				cfg.save();
+			ex.preInit(ex.getConfig());
+			if(ex.getConfig().hasChanged())
+				ex.getConfig().save();
 		});
+		
+		expansions.forEach(MinecraftForge.EVENT_BUS::register);
 	}
 	
 	@EventHandler
@@ -137,60 +117,50 @@ public class ExpandedEquivalence
 	@SubscribeEvent
 	public void remapEMC(EMCRemapEvent evt)
 	{
-		/*
-		Map<NormalizedSimpleStack, Integer> graphMapperValues;
-		
-		Map<IEMCMapper<NormalizedSimpleStack, Integer>, Configuration> cfgs = new HashMap<>();
-		List<IEMCMapper<NormalizedSimpleStack, Integer>> emcMappers = new ArrayList<>();
-		
-		expansions.forEach(ex -> 
-		{
-			List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers = new ArrayList<>();
-			ex.getMappers(mappers);
-			for(IEMCMapper<NormalizedSimpleStack, Integer> m : mappers)
-				cfgs.put(m, ex.getConfig());
-			emcMappers.addAll(mappers);
-		});
-		
-		SimpleGraphMapper mapper = new SimpleGraphMapper(new HiddenFractionArithmetic());
-		FractionToIntGenerator<NormalizedSimpleStack> valueGenerator = new FractionToIntGenerator(mapper);
-		IMappingCollector<NormalizedSimpleStack, Integer> mappingCollector = new WildcardSetValueFixCollector(new IntToFractionCollector(mapper));
-		{
-			LOG.info("Starting to collect Mappings in " + emcMappers.size() + " Mappers...");
-			for(IEMCMapper emcMapper : emcMappers)
-			{
-				try
-				{
-					DumpToFileCollector.currentGroupName = emcMapper.getName();
-					emcMapper.addMappings(mappingCollector, cfgs.get(emcMapper));
-				} catch(Exception e)
-				{
-					LOG.fatal("Exception during Mapping Collection from Mapper {}. PLEASE REPORT THIS! EMC VALUES MIGHT BE INCONSISTENT!", (Object) emcMapper.getClass().getName());
-					e.printStackTrace();
-				}
-			}
-			DumpToFileCollector.currentGroupName = "NSSHelper";
-			NormalizedSimpleStack.addMappings(mappingCollector);
-			LOG.info("Mapping Collection finished");
-			mappingCollector.finishCollection();
-			LOG.info("Starting to generate Values:");
-			graphMapperValues = valueGenerator.generateValues();
-			LOG.info("Generated Values... Unfiltered " + graphMapperValues.size());
-			graphMapperValues.entrySet().removeIf(e -> !(e.getKey() instanceof NSSItem) || ((NSSItem) e.getKey()).damage == OreDictionary.WILDCARD_VALUE || (Integer) e.getValue().intValue() <= 0);
-			LOG.info("Filtered Values... Outcome " + graphMapperValues.size());
-		}
-		for(Map.Entry<NormalizedSimpleStack, Integer> entry : graphMapperValues.entrySet())
-		{
-			NSSItem normStackItem = (NSSItem) entry.getKey();
-			Item obj = (Item) Item.REGISTRY.getObject(new ResourceLocation(normStackItem.itemName));
-			if(obj != null)
-			{
-				EMCMapper.emc.put(new SimpleStack(obj.getRegistryName(), normStackItem.damage), entry.getValue());
-				continue;
-			}
-			LOG.warn("Could not add EMC value for {}|{}. Can not get ItemID!", (Object) normStackItem.itemName, (Object) normStackItem.damage);
-		}
-		*/
+		/* Map<NormalizedSimpleStack, Integer> graphMapperValues;
+		 * 
+		 * Map<IEMCMapper<NormalizedSimpleStack, Integer>, Configuration> cfgs =
+		 * new HashMap<>(); List<IEMCMapper<NormalizedSimpleStack, Integer>>
+		 * emcMappers = new ArrayList<>();
+		 * 
+		 * expansions.forEach(ex -> { List<IEMCMapper<NormalizedSimpleStack,
+		 * Integer>> mappers = new ArrayList<>(); ex.getMappers(mappers);
+		 * for(IEMCMapper<NormalizedSimpleStack, Integer> m : mappers)
+		 * cfgs.put(m, ex.getConfig()); emcMappers.addAll(mappers); });
+		 * 
+		 * SimpleGraphMapper mapper = new SimpleGraphMapper(new
+		 * HiddenFractionArithmetic());
+		 * FractionToIntGenerator<NormalizedSimpleStack> valueGenerator = new
+		 * FractionToIntGenerator(mapper);
+		 * IMappingCollector<NormalizedSimpleStack, Integer> mappingCollector =
+		 * new WildcardSetValueFixCollector(new IntToFractionCollector(mapper));
+		 * { LOG.info("Starting to collect Mappings in " + emcMappers.size() +
+		 * " Mappers..."); for(IEMCMapper emcMapper : emcMappers) { try {
+		 * DumpToFileCollector.currentGroupName = emcMapper.getName();
+		 * emcMapper.addMappings(mappingCollector, cfgs.get(emcMapper)); }
+		 * catch(Exception e) { LOG.
+		 * fatal("Exception during Mapping Collection from Mapper {}. PLEASE REPORT THIS! EMC VALUES MIGHT BE INCONSISTENT!"
+		 * , (Object) emcMapper.getClass().getName()); e.printStackTrace(); } }
+		 * DumpToFileCollector.currentGroupName = "NSSHelper";
+		 * NormalizedSimpleStack.addMappings(mappingCollector);
+		 * LOG.info("Mapping Collection finished");
+		 * mappingCollector.finishCollection();
+		 * LOG.info("Starting to generate Values:"); graphMapperValues =
+		 * valueGenerator.generateValues();
+		 * LOG.info("Generated Values... Unfiltered " +
+		 * graphMapperValues.size()); graphMapperValues.entrySet().removeIf(e ->
+		 * !(e.getKey() instanceof NSSItem) || ((NSSItem) e.getKey()).damage ==
+		 * OreDictionary.WILDCARD_VALUE || (Integer) e.getValue().intValue() <=
+		 * 0); LOG.info("Filtered Values... Outcome " +
+		 * graphMapperValues.size()); } for(Map.Entry<NormalizedSimpleStack,
+		 * Integer> entry : graphMapperValues.entrySet()) { NSSItem
+		 * normStackItem = (NSSItem) entry.getKey(); Item obj = (Item)
+		 * Item.REGISTRY.getObject(new
+		 * ResourceLocation(normStackItem.itemName)); if(obj != null) {
+		 * EMCMapper.emc.put(new SimpleStack(obj.getRegistryName(),
+		 * normStackItem.damage), entry.getValue()); continue; }
+		 * LOG.warn("Could not add EMC value for {}|{}. Can not get ItemID!",
+		 * (Object) normStackItem.itemName, (Object) normStackItem.damage); } */
 	}
 	
 	public static void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration config)
