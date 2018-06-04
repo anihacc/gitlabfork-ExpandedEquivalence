@@ -16,6 +16,9 @@ import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
+import moze_intel.projecte.impl.EMCProxyImpl;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 
@@ -32,6 +35,46 @@ public abstract class Expansion
 		this.config = config;
 		this.args = args;
 		this.modid = modid;
+	}
+	
+	protected final Map<String, ConfigEMCValue> cfgEmc = new HashMap<>();
+	private List<ConfigEMCValue> values;
+	
+	/**
+	 * Call {@link #addEMCCfg(int, String, String)} at this method to define new
+	 * config entries for different items
+	 */
+	protected void addCfgEMC()
+	{
+	}
+	
+	protected void addEMCCfg(int base, String id)
+	{
+		addEMCCfg(base, id, "$");
+	}
+	
+	protected void addEMCCfg(int base, String id, String name)
+	{
+		if(values != null)
+			values.add(new ConfigEMCValue(base, id, name != null ? (name.equals("$") ? splitName(id) : name) : id));
+	}
+	
+	protected int getCfgEMC(int base, String id, String name)
+	{
+		return config.getInt(id, "EMC", base, 0, Integer.MAX_VALUE, "Base cost for " + name + ". Set to 0 to disable.");
+	}
+	
+	private static String splitName(String str)
+	{
+		StringBuilder sb = new StringBuilder();
+		for(char c : str.toCharArray())
+		{
+			int codePoint = Character.toCodePoint(Character.toUpperCase(c), Character.toLowerCase(c));
+			if(Character.isAlphabetic(codePoint) && sb.length() > 0 && sb.charAt(sb.length() - 1) != ' ')
+				sb.append(' ');
+			sb.append(c);
+		}
+		return sb.toString();
 	}
 	
 	public Configuration getConfig()
@@ -82,7 +125,19 @@ public abstract class Expansion
 		return exps;
 	}
 	
-	public void preInit(@Nullable Configuration configs)
+	public final void preInit$(@Nullable Configuration configs)
+	{
+		List<ConfigEMCValue> emcs = new ArrayList<>();
+		values = emcs;
+		addCfgEMC();
+		values = null;
+		emcs.forEach(c -> cfgEmc.put(c.id, c));
+		cfgEmc.values().forEach(c -> c.value = getCfgEMC(c.base, c.id, c.name));
+		
+		preInit(configs);
+	}
+	
+	protected void preInit(@Nullable Configuration configs)
 	{
 		
 	}
@@ -102,8 +157,42 @@ public abstract class Expansion
 		
 	}
 	
+	protected boolean addEMC(Item item, String id)
+	{
+		return addEMC(item, 0, id);
+	}
+	
+	protected boolean addEMC(Item item, int meta, String id)
+	{
+		boolean add;
+		if(add = cfgEmc.containsKey(id))
+			EMCProxyImpl.instance.registerCustomEMC(new ItemStack(item, 1, meta), cfgEmc.get(id).getValue());
+		return add;
+	}
+	
 	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
 	{
 		
+	}
+	
+	public static class ConfigEMCValue
+	{
+		final int base;
+		final String id, name;
+		
+		private int value;
+		
+		ConfigEMCValue(int base, String id, String name)
+		{
+			this.base = base;
+			this.id = id;
+			this.name = name;
+			value = base;
+		}
+		
+		public int getValue()
+		{
+			return value;
+		}
 	}
 }

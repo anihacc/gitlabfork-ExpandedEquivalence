@@ -1,6 +1,6 @@
 #Project info
 author=Zeitheron
-start_git_commit=415980b6bbb3ed9b27b022489bf10685ed1a856c
+start_git_commit=1375adfdf4f20518406650b94a1c3134aa1e3dba
 git_commit=https://github.com/Zeitheron/ExpandedEquivalence/commit/{{hash}}
 
 #Runtime info

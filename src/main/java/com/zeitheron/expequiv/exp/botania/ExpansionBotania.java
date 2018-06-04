@@ -8,6 +8,7 @@ import com.zeitheron.expequiv.exp.ExpansionReg;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import vazkii.botania.common.block.ModBlocks;
@@ -21,16 +22,16 @@ public class ExpansionBotania extends Expansion
 	}
 	
 	@Override
-	public void preInit(Configuration configs)
+	protected void addCfgEMC()
 	{
-		
+		addEMCCfg(16, "Flower");
 	}
 	
 	@Override
 	public void registerEMC(IEMCProxy emc)
 	{
 		for(int i = 0; i < 16; ++i)
-			emc.registerCustomEMC(new ItemStack(ModBlocks.flower, 1, i), 16);
+			addEMC(Item.getItemFromBlock(ModBlocks.flower), i, "Flower");
 	}
 	
 	@Override

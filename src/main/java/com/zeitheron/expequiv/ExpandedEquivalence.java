@@ -89,7 +89,7 @@ public class ExpandedEquivalence
 		
 		expansions.forEach(ex ->
 		{
-			ex.preInit(ex.getConfig());
+			ex.preInit$(ex.getConfig());
 			if(ex.getConfig().hasChanged())
 				ex.getConfig().save();
 		});

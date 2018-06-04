@@ -10,7 +10,7 @@ import de.ellpeck.actuallyadditions.mod.items.InitItems;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
 
 @ExpansionReg(modid = "actuallyadditions")
@@ -21,33 +21,26 @@ public class ExpansionActuallyAdditions extends Expansion
 		super(modid, config, args);
 	}
 	
-	public int canolaCost = 64;
-	public int coffeCost = 64;
-	public int riceCost = 64;
-	public int batWingsCost = 480;
-	public int solidXPCost = 863;
-	public int blackQuartzOreCost = 256;
-	
 	@Override
-	public void preInit(Configuration c)
+	protected void addCfgEMC()
 	{
-		canolaCost = c.getInt("Canola", "EMC", canolaCost, 0, Integer.MAX_VALUE, "Base cost for Canola");
-		coffeCost = c.getInt("CoffeBeans", "EMC", coffeCost, 0, Integer.MAX_VALUE, "Base cost for Coffe Beans");
-		riceCost = c.getInt("Rice", "EMC", riceCost, 0, Integer.MAX_VALUE, "Base cost for Rice");
-		batWingsCost = c.getInt("BatWings", "EMC", batWingsCost, 0, Integer.MAX_VALUE, "Base cost for Bat's Wings");
-		solidXPCost = c.getInt("SolidifiedXP", "EMC", solidXPCost, 0, Integer.MAX_VALUE, "Base cost for Solidified Expirience");
-		blackQuartzOreCost = c.getInt("BlackQuartzOre", "EMC", blackQuartzOreCost, 0, Integer.MAX_VALUE, "Base cost for Black Quartz Ore");
+		addEMCCfg(64, "Canola");
+		addEMCCfg(64, "CoffeBeans");
+		addEMCCfg(64, "Rice");
+		addEMCCfg(480, "BatWings");
+		addEMCCfg(863, "SolidifiedXP");
+		addEMCCfg(256, "BlackQuartzOre");
 	}
 	
 	@Override
 	public void registerEMC(IEMCProxy emc)
 	{
-		emc.registerCustomEMC(new ItemStack(InitBlocks.blockMisc, 1, 3), blackQuartzOreCost);
-		emc.registerCustomEMC(new ItemStack(InitItems.itemFoods, 1, 16), riceCost);
-		emc.registerCustomEMC(new ItemStack(InitItems.itemMisc, 1, 15), batWingsCost);
-		emc.registerCustomEMC(new ItemStack(InitItems.itemMisc, 1, 13), canolaCost);
-		emc.registerCustomEMC(new ItemStack(InitItems.itemCoffeeBean), coffeCost);
-		emc.registerCustomEMC(new ItemStack(InitItems.itemSolidifiedExperience), solidXPCost);
+		addEMC(InitItems.itemMisc, 13, "Canola");
+		addEMC(InitItems.itemCoffeeBean, "CoffeBeans");
+		addEMC(InitItems.itemFoods, 16, "Rice");
+		addEMC(InitItems.itemMisc, 15, "BatWings");
+		addEMC(InitItems.itemSolidifiedExperience, "SolidifiedXP");
+		addEMC(Item.getItemFromBlock(InitBlocks.blockMisc), 3, "BlackQuartzOre");
 	}
 	
 	@Override

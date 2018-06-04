@@ -17,16 +17,19 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 @ExpansionReg(modid = "appliedenergistics2")
-public class AE2Expansion extends Expansion
+public class ExpansionAE2 extends Expansion
 {
-	public AE2Expansion(String modid, Configuration config, Object[] args)
+	public ExpansionAE2(String modid, Configuration config, Object[] args)
 	{
 		super(modid, config, args);
 	}
 	
 	@Override
-	public void preInit(Configuration c)
+	protected void addCfgEMC()
 	{
+		addEMCCfg(64, "SkyStone");
+		addEMCCfg(256, "MatterBall");
+		addEMCCfg(256_000, "Singularity");
 	}
 	
 	@Override
@@ -37,12 +40,12 @@ public class AE2Expansion extends Expansion
 		
 		Item material = find.apply("material");
 		emc.registerCustomEMC(new ItemStack(material, 1, 1), 64);
-		emc.registerCustomEMC(new ItemStack(material, 1, 6), 256);
+		addEMC(material, 6, "MatterBall");
 		emc.registerCustomEMC(new ItemStack(material, 1, 10), 32);
 		emc.registerCustomEMC(new ItemStack(material, 1, 11), 128);
 		emc.registerCustomEMC(new ItemStack(material, 1, 12), 128);
-		emc.registerCustomEMC(new ItemStack(material, 1, 47), 256_000);
-		emc.registerCustomEMC(new ItemStack(find.apply("sky_stone_block")), 64);
+		addEMC(material, 47, "Singularity");
+		addEMC(find.apply("sky_stone_block"), "SkyStone");
 	}
 	
 	@Override

@@ -31,16 +31,12 @@ public class ExpansionDraconicEvolution extends Expansion
 		super(modid, config, args);
 	}
 	
-	public int draconiumDustCost = 8_192;
-	public int dragonHeartCost = 139_264;
-	public int chaosShardCost = 1_024_000;
-	
 	@Override
-	public void preInit(Configuration c)
+	protected void addCfgEMC()
 	{
-		draconiumDustCost = c.getInt("DraconiumDust", "EMC", draconiumDustCost, 0, Integer.MAX_VALUE, "Base cost for Draconium Dust");
-		dragonHeartCost = c.getInt("DragonHeart", "EMC", dragonHeartCost, 0, Integer.MAX_VALUE, "Base cost for Dragon Heart");
-		chaosShardCost = c.getInt("ChaosShard", "EMC", chaosShardCost, 0, Integer.MAX_VALUE, "Base cost for Chaos Shard");
+		addEMCCfg(8192, "DraconiumDust");
+		addEMCCfg(139264, "DragonHeart");
+		addEMCCfg(1024000, "ChaosShard");
 	}
 	
 	@Override
@@ -52,29 +48,8 @@ public class ExpansionDraconicEvolution extends Expansion
 	@Override
 	public void registerEMC(IEMCProxy emcp)
 	{
-		emcp.registerCustomEMC(new ItemStack(DEFeatures.draconiumDust), draconiumDustCost);
-		emcp.registerCustomEMC(new ItemStack(DEFeatures.dragonHeart), dragonHeartCost);
-		emcp.registerCustomEMC(new ItemStack(DEFeatures.chaosShard), chaosShardCost);
-		
-		// for(IFusionRecipe rec : FusionRecipeAPI.getRecipes())
-		// if(!(rec instanceof FusionUpgradeRecipe) && !(rec instanceof
-		// ToolUpgradeRecipe))
-		// {
-		// int emc = EMCUtils.getEMC(rec.getRecipeCatalyst());
-		// int cemc = 0;
-		// for(Object o : rec.getRecipeIngredients())
-		// if((cemc = EMCUtils.getEMC(o)) > 0)
-		// emc += cemc;
-		// else
-		// continue recipe;
-		// ItemStack output = rec.getRecipeOutput(ItemStack.EMPTY);
-		// if(!InterItemStack.isStackNull(output) && emc > 0 &&
-		// emcp.getValue(output) < 1)
-		// {
-		// mappingCollector.addConversion(arg0, arg1, arg2);
-		// emcp.registerCustomEMC(output, emc);
-		// mod = true;
-		// }
-		// }
+		addEMC(DEFeatures.draconiumDust, "DraconiumDust");
+		addEMC(DEFeatures.dragonHeart, "DragonHeart");
+		addEMC(DEFeatures.chaosShard, "ChaosShard");
 	}
 }

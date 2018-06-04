@@ -21,18 +21,16 @@ public class ExpansionAvaritia extends Expansion
 		super(modid, config, args);
 	}
 	
-	public int neutronPileCost = 512;
-	
 	@Override
-	public void preInit(Configuration c)
+	protected void addCfgEMC()
 	{
-		neutronPileCost = c.getInt("NeutronPile", "EMC", neutronPileCost, 0, Integer.MAX_VALUE, "Base cost for Pile of Neutrons");
+		addEMCCfg(512, "NeutronPile");
 	}
 	
 	@Override
 	public void registerEMC(IEMCProxy emcProxy)
 	{
-		emcProxy.registerCustomEMC(ModItems.neutron_pile, neutronPileCost);
+		addEMC(ModItems.neutron_pile.getItem(), ModItems.neutron_pile.getItemDamage(), "NeutronPile");
 	}
 	
 	@Override

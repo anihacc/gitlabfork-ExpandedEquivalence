@@ -16,26 +16,21 @@ public class ExpansionMinecraft extends Expansion
 		super(modid, config, args);
 	}
 	
-	public int dragonBreathCost = 1 + 1_024;
-	public int expBottleCost = 864;
-	public int elytraCost = 65_536;
-	public int totemCost = 1024 * 50;
-	
 	@Override
-	public void preInit(Configuration c)
+	protected void addCfgEMC()
 	{
-		dragonBreathCost = c.getInt("DragonBreath", "EMC", dragonBreathCost, 0, Integer.MAX_VALUE, "Base cost for Dragon's Breath");
-		expBottleCost = c.getInt("XPBottle", "EMC", expBottleCost, 0, Integer.MAX_VALUE, "Base cost for Bottle o' Enchanting");
-		elytraCost = c.getInt("Elytra", "EMC", elytraCost, 0, Integer.MAX_VALUE, "Base cost for Elytra");
-		totemCost = c.getInt("TotemOfUndying", "EMC", totemCost, 0, Integer.MAX_VALUE, "Base cost for Totem of Undying");
+		addEMCCfg(1025, "DragonBreath", "Dragon's Breath");
+		addEMCCfg(864, "XPBottle", "Bottle o' Enchanting");
+		addEMCCfg(65536, "Elytra");
+		addEMCCfg(1024 * 50, "TotemOfUndying");
 	}
 	
 	@Override
 	public void registerEMC(IEMCProxy emc)
 	{
-		emc.registerCustomEMC(new ItemStack(Items.DRAGON_BREATH), dragonBreathCost);
-		emc.registerCustomEMC(new ItemStack(Items.EXPERIENCE_BOTTLE), expBottleCost);
-		emc.registerCustomEMC(new ItemStack(Items.ELYTRA), elytraCost);
-		emc.registerCustomEMC(new ItemStack(Items.TOTEM_OF_UNDYING), totemCost);
+		addEMC(Items.DRAGON_BREATH, "DragonBreath");
+		addEMC(Items.EXPERIENCE_BOTTLE, "XPBottle");
+		addEMC(Items.ELYTRA, "Elytra");
+		addEMC(Items.TOTEM_OF_UNDYING, "TotemOfUndying");
 	}
 }
