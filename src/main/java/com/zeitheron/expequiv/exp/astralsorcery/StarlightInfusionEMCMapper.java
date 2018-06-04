@@ -1,18 +1,16 @@
-package com.zeitheron.expequiv.exp.ic2;
+package com.zeitheron.expequiv.exp.astralsorcery;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 import com.zeitheron.expequiv.exp.CraftingIngredients;
 
-import ic2.core.recipe.AdvRecipe;
-import ic2.core.recipe.AdvShapelessRecipe;
-import moze_intel.projecte.PECore;
+import hellfirepvp.astralsorcery.common.crafting.infusion.AbstractInfusionRecipe;
+import hellfirepvp.astralsorcery.common.crafting.infusion.InfusionRecipeRegistry;
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
 import moze_intel.projecte.emc.json.NSSFake;
@@ -20,36 +18,35 @@ import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 
-class AdvRecipeEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
+class StarlightInfusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 {
-	private final Set<Class> canNotMap = new HashSet<Class>();
-	private final Map<Class, Integer> recipeCount = new HashMap<Class, Integer>();
-	
 	@Override
 	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration config)
 	{
-		this.recipeCount.clear();
-		this.canNotMap.clear();
-		block2: for(IRecipe recipe : CraftingManager.REGISTRY)
+		Set<AbstractInfusionRecipe> recipes = new HashSet<>();
+		recipes.addAll(InfusionRecipeRegistry.recipes);
+		recipes.addAll(InfusionRecipeRegistry.mtRecipes);
+		
+		block2: for(AbstractInfusionRecipe recipe : recipes)
 		{
-			if(!(recipe instanceof AdvRecipe) && !(recipe instanceof AdvShapelessRecipe))
-				continue;
-			boolean handled = false;
-			ItemStack recipeOutput = recipe.getRecipeOutput();
+			ItemStack recipeOutput = recipe.getOutputForMatching();
 			if(recipeOutput.isEmpty())
 				continue;
 			NormalizedSimpleStack recipeOutputNorm = NSSItem.create(recipeOutput);
-
-			handled = true;
+			
 			for(CraftingIngredients variation : getIngredientsFor(recipe))
 			{
 				IngredientMap ingredientMap = new IngredientMap();
+				
+				NormalizedSimpleStack additionalEMC = NSSFake.create(recipe.toString());
+				mapper.setValueBefore(additionalEMC, (int) (1000 * recipe.getLiquidStarlightConsumptionChance()));
+				ingredientMap.addIngredient(additionalEMC, 1);
+				
 				for(ItemStack stack : variation.fixedIngredients)
 				{
 					if(stack.isEmpty())
@@ -61,11 +58,11 @@ class AdvRecipeEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 						ingredientMap.addIngredient(NSSItem.create(stack), 1);
 					} catch(Exception e)
 					{
-						PECore.LOGGER.fatal("Exception in CraftingMapper when parsing Recipe Ingredients: RecipeType: {}, Ingredient: {}", (Object) recipe.getClass().getName(), (Object) stack.toString());
 						e.printStackTrace();
 						continue block2;
 					}
 				}
+				
 				for(Iterable<ItemStack> multiIngredient : variation.multiIngredients)
 				{
 					NormalizedSimpleStack dummy = NSSFake.create(multiIngredient.toString());
@@ -81,21 +78,23 @@ class AdvRecipeEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 						mapper.addConversion(1, dummy, groupIngredientMap.getMap());
 					}
 				}
+				
 				mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, ingredientMap.getMap());
 			}
+			
 		}
 	}
 	
 	@Override
 	public String getName()
 	{
-		return "AdvCraftingMapper";
+		return "ASStarlightMapper";
 	}
 	
 	@Override
 	public String getDescription()
 	{
-		return "Add Conversions for Adv Crafting Recipes gathered from net.minecraft.item.crafting.CraftingManager";
+		return "Add Conversions for starlight infusion recipes";
 	}
 	
 	@Override
@@ -104,25 +103,23 @@ class AdvRecipeEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		return true;
 	}
 	
-	public Iterable<CraftingIngredients> getIngredientsFor(IRecipe recipe)
+	public Iterable<CraftingIngredients> getIngredientsFor(AbstractInfusionRecipe recipe)
 	{
 		ArrayList<Iterable<ItemStack>> variableInputs = new ArrayList<Iterable<ItemStack>>();
 		ArrayList<ItemStack> fixedInputs = new ArrayList<ItemStack>();
-		for(Ingredient recipeItem : recipe.getIngredients())
+		NonNullList<ItemStack> recipeItem = recipe.getInput().getApplicableItems();
+		b:
 		{
-			ItemStack[] matches = recipeItem.getMatchingStacks();
-			if(matches.length == 1)
+			if(recipeItem.size() == 1)
 			{
-				fixedInputs.add(matches[0].copy());
-				continue;
+				fixedInputs.add(recipeItem.get(0).copy());
+				break b;
 			}
-			if(matches.length <= 0)
-				continue;
+			if(recipeItem.size() <= 0)
+				break b;
 			LinkedList<ItemStack> recipeItemOptions = new LinkedList<ItemStack>();
-			for(ItemStack option : matches)
-			{
+			for(ItemStack option : recipeItem)
 				recipeItemOptions.add(option.copy());
-			}
 			variableInputs.add(recipeItemOptions);
 		}
 		return Collections.singletonList(new CraftingIngredients(fixedInputs, variableInputs));

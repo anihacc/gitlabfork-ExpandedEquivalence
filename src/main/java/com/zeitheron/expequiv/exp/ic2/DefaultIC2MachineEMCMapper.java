@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import com.zeitheron.expequiv.exp.CraftingIngredients;
+
 import ic2.api.recipe.IBasicMachineRecipeManager;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipe;
@@ -126,17 +128,5 @@ class DefaultIC2MachineEMCMapper implements IEMCMapper<NormalizedSimpleStack, In
 		}
 		
 		return Collections.singletonList(new CraftingIngredients(fixedInputs, variableInputs));
-	}
-	
-	private static class CraftingIngredients
-	{
-		public final Iterable<ItemStack> fixedIngredients;
-		public final Iterable<Iterable<ItemStack>> multiIngredients;
-		
-		public CraftingIngredients(Iterable<ItemStack> fixedIngredients, Iterable<Iterable<ItemStack>> multiIngredients)
-		{
-			this.fixedIngredients = fixedIngredients;
-			this.multiIngredients = multiIngredients;
-		}
 	}
 }

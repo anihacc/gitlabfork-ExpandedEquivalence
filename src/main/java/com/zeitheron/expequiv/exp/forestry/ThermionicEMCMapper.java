@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Set;
 
+import com.zeitheron.expequiv.exp.CraftingIngredients;
+
 import forestry.api.recipes.IFabricatorRecipe;
 import forestry.factory.recipes.FabricatorRecipeManager;
 import moze_intel.projecte.emc.IngredientMap;
@@ -128,17 +130,5 @@ class ThermionicEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		}
 		
 		return Collections.singletonList(new CraftingIngredients(fixedInputs, variableInputs));
-	}
-	
-	private static class CraftingIngredients
-	{
-		public final Iterable<ItemStack> fixedIngredients;
-		public final Iterable<Iterable<ItemStack>> multiIngredients;
-		
-		public CraftingIngredients(Iterable<ItemStack> fixedIngredients, Iterable<Iterable<ItemStack>> multiIngredients)
-		{
-			this.fixedIngredients = fixedIngredients;
-			this.multiIngredients = multiIngredients;
-		}
 	}
 }

@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.zeitheron.expequiv.exp.CraftingIngredients;
+
 import morph.avaritia.recipe.AvaritiaRecipeManager;
 import morph.avaritia.recipe.compressor.ICompressorRecipe;
 import moze_intel.projecte.emc.IngredientMap;
@@ -100,18 +102,6 @@ class CompressionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 	public boolean isAvailable()
 	{
 		return true;
-	}
-	
-	private static class CraftingIngredients
-	{
-		public final Iterable<ItemStack> fixedIngredients;
-		public final Iterable<Iterable<ItemStack>> multiIngredients;
-		
-		public CraftingIngredients(Iterable<ItemStack> fixedIngredients, Iterable<Iterable<ItemStack>> multiIngredients)
-		{
-			this.fixedIngredients = fixedIngredients;
-			this.multiIngredients = multiIngredients;
-		}
 	}
 	
 	public Iterable<CraftingIngredients> getIngredientsFor(ICompressorRecipe recipe)

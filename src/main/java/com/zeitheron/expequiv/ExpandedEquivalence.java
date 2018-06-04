@@ -59,6 +59,7 @@ public class ExpandedEquivalence
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
+		List<Class<? extends Expansion>> annotated = new ArrayList<>();
 		Set<ASMData> asmDatas = e.getAsmData().getAll(ExpansionReg.class.getCanonicalName());
 		asmDatas.forEach(asm ->
 		{
@@ -69,6 +70,7 @@ public class ExpandedEquivalence
 				if(reg != null && Expansion.class.isAssignableFrom(cl))
 				{
 					Class<? extends Expansion> acl = cl.asSubclass(Expansion.class);
+					annotated.add(acl);
 					Expansion.registerExpansion(reg.modid(), acl);
 				}
 			} catch(Throwable er)
@@ -76,6 +78,10 @@ public class ExpandedEquivalence
 				er.printStackTrace();
 			}
 		});
+		
+		LOG.info("Registered " + annotated.size() + " new possible expansions based off @ExpansionReg:");
+		for(Class<? extends Expansion> c : annotated)
+			LOG.info("  " + c.getName());
 		
 		File cfgDir = e.getSuggestedConfigurationFile();
 		String path = cfgDir.getAbsolutePath();
@@ -86,6 +92,10 @@ public class ExpandedEquivalence
 			cfgsDir.mkdirs();
 		
 		expansions = Expansion.createExpansionList(cfgsDir, InfoEE.MOD_ID, InfoEE.MOD_NAME, InfoEE.MOD_VERSION);
+		
+		LOG.info("Created " + expansions.size() + " expansions:");
+		for(Expansion ex : expansions)
+			LOG.info("  " + ex.getClass().getName());
 		
 		expansions.forEach(ex ->
 		{

@@ -3,8 +3,9 @@ package com.zeitheron.expequiv.exp.forestry;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Set;
+
+import com.zeitheron.expequiv.exp.CraftingIngredients;
 
 import forestry.api.recipes.IMoistenerRecipe;
 import forestry.factory.recipes.MoistenerRecipeManager;
@@ -15,7 +16,6 @@ import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -113,17 +113,5 @@ class MoistenerEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		ArrayList<ItemStack> fixedInputs = new ArrayList<ItemStack>();
 		fixedInputs.add(recipe.getResource());
 		return Collections.singletonList(new CraftingIngredients(fixedInputs, variableInputs));
-	}
-	
-	private static class CraftingIngredients
-	{
-		public final Iterable<ItemStack> fixedIngredients;
-		public final Iterable<Iterable<ItemStack>> multiIngredients;
-		
-		public CraftingIngredients(Iterable<ItemStack> fixedIngredients, Iterable<Iterable<ItemStack>> multiIngredients)
-		{
-			this.fixedIngredients = fixedIngredients;
-			this.multiIngredients = multiIngredients;
-		}
 	}
 }

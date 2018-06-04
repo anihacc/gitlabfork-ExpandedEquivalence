@@ -3,8 +3,9 @@ package com.zeitheron.expequiv.exp.buildcraft;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
+
+import com.zeitheron.expequiv.exp.CraftingIngredients;
 
 import buildcraft.api.recipes.AssemblyRecipe;
 import buildcraft.api.recipes.IngredientStack;
@@ -90,18 +91,6 @@ class LaserTableEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 	public boolean isAvailable()
 	{
 		return true;
-	}
-	
-	private static class CraftingIngredients
-	{
-		public final Iterable<ItemStack> fixedIngredients;
-		public final Iterable<Iterable<ItemStack>> multiIngredients;
-		
-		public CraftingIngredients(Iterable<ItemStack> fixedIngredients, Iterable<Iterable<ItemStack>> multiIngredients)
-		{
-			this.fixedIngredients = fixedIngredients;
-			this.multiIngredients = multiIngredients;
-		}
 	}
 	
 	public Iterable<CraftingIngredients> getIngredientsFor(Set<IngredientStack> recipe)

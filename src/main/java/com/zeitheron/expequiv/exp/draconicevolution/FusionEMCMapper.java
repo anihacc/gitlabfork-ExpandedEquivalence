@@ -14,6 +14,7 @@ import com.brandon3055.draconicevolution.api.fusioncrafting.FusionRecipeAPI;
 import com.brandon3055.draconicevolution.api.fusioncrafting.IFusionRecipe;
 import com.brandon3055.draconicevolution.api.itemupgrade.FusionUpgradeRecipe;
 import com.brandon3055.draconicevolution.lib.ToolUpgradeRecipe;
+import com.zeitheron.expequiv.exp.CraftingIngredients;
 
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
@@ -138,18 +139,6 @@ class FusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		public boolean canHandle(IFusionRecipe recipe)
 		{
 			return !(recipe instanceof ToolUpgradeRecipe) && !(recipe instanceof FusionUpgradeRecipe);
-		}
-	}
-	
-	private static class CraftingIngredients
-	{
-		public final Iterable<ItemStack> fixedIngredients;
-		public final Iterable<Iterable<ItemStack>> multiIngredients;
-		
-		public CraftingIngredients(Iterable<ItemStack> fixedIngredients, Iterable<Iterable<ItemStack>> multiIngredients)
-		{
-			this.fixedIngredients = fixedIngredients;
-			this.multiIngredients = multiIngredients;
 		}
 	}
 	
