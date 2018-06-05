@@ -56,26 +56,4 @@ class SeedReprocessorEMCMapper implements IEMCMapper<NormalizedSimpleStack, Inte
 	{
 		return true;
 	}
-	
-	public Iterable<CraftingIngredients> getIngredientsFor(AlloyRecipe recipe)
-	{
-		ArrayList<Iterable<ItemStack>> variableInputs = new ArrayList<Iterable<ItemStack>>();
-		ArrayList<ItemStack> fixedInputs = new ArrayList<ItemStack>();
-		for(IngredientStack recipeItem : Arrays.asList(recipe.input0, recipe.input1))
-		{
-			ItemStack[] matches = recipeItem.getSizedStackList().toArray(new ItemStack[0]);
-			if(matches.length == 1)
-			{
-				fixedInputs.add(matches[0].copy());
-				continue;
-			}
-			if(matches.length <= 0)
-				continue;
-			LinkedList<ItemStack> recipeItemOptions = new LinkedList<ItemStack>();
-			for(ItemStack option : matches)
-				recipeItemOptions.add(option.copy());
-			variableInputs.add(recipeItemOptions);
-		}
-		return Collections.singletonList(new CraftingIngredients(fixedInputs, variableInputs));
-	}
 }

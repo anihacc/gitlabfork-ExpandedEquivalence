@@ -125,7 +125,7 @@ public abstract class Expansion
 		return exps;
 	}
 	
-	public final void preInit$(@Nullable Configuration configs)
+	public final void preInit$(Configuration configs)
 	{
 		List<ConfigEMCValue> emcs = new ArrayList<>();
 		values = emcs;
@@ -137,7 +137,7 @@ public abstract class Expansion
 		preInit(configs);
 	}
 	
-	protected void preInit(@Nullable Configuration configs)
+	protected void preInit(Configuration configs)
 	{
 		
 	}
