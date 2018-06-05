@@ -38,6 +38,8 @@ public class ExpansionForestry extends Expansion
 		addEMCCfg(32, "PollenCluster");
 		addEMCCfg(512, "CrystallinePollenCluster");
 		addEMCCfg(16_384, "ProvenGrafter");
+		addEMCCfg(128, "Apatite");
+		addEMCCfg(32, "Ash");
 	}
 	
 	@Override
@@ -46,6 +48,8 @@ public class ExpansionForestry extends Expansion
 		for(int i = 0; i < 7; ++i)
 			addEMC(ModuleCore.items.fruits, i, "Fruits");
 		addEMC(ModuleCore.items.beeswax, "Beeswax");
+		addEMC(ModuleCore.items.apatite, "Apatite");
+		addEMC(ModuleCore.items.ash, "Ash");
 		addEMC(ModuleApiculture.getItems().honeyDrop, "HoneyDrop");
 		addEMC(ModuleApiculture.getItems().propolis, 0, "Propolis");
 		addEMC(ModuleApiculture.getItems().propolis, 1, "StickyPropolis");

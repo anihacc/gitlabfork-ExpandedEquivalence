@@ -46,8 +46,10 @@ public class ExpansionIC2 extends Expansion implements IEMCMapper<NormalizedSimp
 		Item nuclear = find.apply("nuclear");
 		Item dust = find.apply("dust");
 		Item misc_resource = find.apply("misc_resource");
+		
 		addEMC(ingot, 5, "SteelIngot");
 		addEMC(misc_resource, 1, "IridiumOre");
+		
 		emc.registerCustomEMC(new ItemStack(nuclear, 1, 2), 4096);
 		emc.registerCustomEMC(new ItemStack(nuclear, 1, 5), 4096);
 		emc.registerCustomEMC(new ItemStack(dust, 1, 0), 160);

@@ -93,9 +93,7 @@ public class ExpandedEquivalence
 		
 		expansions = Expansion.createExpansionList(cfgsDir, InfoEE.MOD_ID, InfoEE.MOD_NAME, InfoEE.MOD_VERSION);
 		
-		LOG.info("Created " + expansions.size() + " expansions:");
-		for(Expansion ex : expansions)
-			LOG.info("  " + ex.getClass().getName());
+		LOG.info("Created " + expansions.size() + " expansions.");
 		
 		expansions.forEach(ex ->
 		{
