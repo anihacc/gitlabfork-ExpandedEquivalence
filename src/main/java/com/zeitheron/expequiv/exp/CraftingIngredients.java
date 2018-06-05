@@ -38,7 +38,7 @@ public class CraftingIngredients
 			{
 				if(stack.getItemDamage() != OreDictionary.WILDCARD_VALUE && stack.getItem().hasContainerItem(stack))
 					im.addIngredient(NSSItem.create(stack.getItem().getContainerItem(stack)), -1);
-				im.addIngredient(NSSItem.create(stack), 1);
+				im.addIngredient(NSSItem.create(stack), stack.getCount());
 			} catch(Exception e)
 			{
 				e.printStackTrace();
@@ -57,7 +57,7 @@ public class CraftingIngredients
 				IngredientMap groupIngredientMap = new IngredientMap();
 				if(stack.getItem().hasContainerItem(stack))
 					groupIngredientMap.addIngredient(NSSItem.create(stack.getItem().getContainerItem(stack)), -1);
-				groupIngredientMap.addIngredient(NSSItem.create(stack), 1);
+				groupIngredientMap.addIngredient(NSSItem.create(stack), stack.getCount());
 				mapper.addConversion(1, dummy, groupIngredientMap.getMap());
 			}
 		}

@@ -25,8 +25,13 @@ public class ExpansionMysticalAgriculture extends Expansion
 	protected void addCfgEMC()
 	{
 		addEMCCfg(8, "InferiumEssence");
+		addEMCCfg(8 * 4, "PrudentiumEssence");
+		addEMCCfg(8 * 16, "IntermediumEssence");
+		addEMCCfg(8 * 64, "SuperiumEssence");
+		addEMCCfg(8 * 256, "SupremiumEssence");
 		addEMCCfg(64, "ProsperityShard");
 		addEMCCfg(96, "FertilizedEssence");
+		addEMCCfg(1024, "MobChunk");
 	}
 	
 	@Override
@@ -35,8 +40,14 @@ public class ExpansionMysticalAgriculture extends Expansion
 		Item itemCrafting = ForgeRegistries.ITEMS.getValue(new ResourceLocation("mysticalagriculture", "crafting"));
 		
 		addEMC(itemCrafting, 0, "InferiumEssence");
+		addEMC(itemCrafting, 1, "PrudentiumEssence");
+		addEMC(itemCrafting, 2, "IntermediumEssence");
+		addEMC(itemCrafting, 3, "SuperiumEssence");
+		addEMC(itemCrafting, 4, "SupremiumEssence");
 		addEMC(itemCrafting, 5, "ProsperityShard");
+		
 		addEMC(ForgeRegistries.ITEMS.getValue(new ResourceLocation("mysticalagriculture", "fertilized_essence")), "FertilizedEssence");
+		addEMC(ForgeRegistries.ITEMS.getValue(new ResourceLocation("mysticalagriculture", "chunk")), "MobChunk");
 	}
 	
 	@Override

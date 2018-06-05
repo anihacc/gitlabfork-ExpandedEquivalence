@@ -1,14 +1,7 @@
 package com.zeitheron.expequiv.exp.avaritia;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-
-import com.zeitheron.expequiv.exp.CraftingIngredients;
 
 import morph.avaritia.recipe.AvaritiaRecipeManager;
 import morph.avaritia.recipe.compressor.ICompressorRecipe;
@@ -34,14 +27,63 @@ class CompressionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 			ItemStack recipeOutput = recipe.getResult();
 			if(recipeOutput.isEmpty())
 				continue;
-			int cost = recipe.getCost();
+			int cost = recipe.getCost() / 2;
 			NormalizedSimpleStack recipeOutputNorm = NSSItem.create(recipeOutput);
 			handled = true;
-			CraftingIngredients variation = CraftingIngredients.getIngredientsFor(recipe.getIngredients());
-			IngredientMap ingredientMap = variation.toIngredients(mapper);
-			if(ingredientMap == null)
-				continue;
-			mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, ingredientMap.getMap());
+			
+			ArrayList<Iterable<ItemStack>> variableInputs = new ArrayList<Iterable<ItemStack>>();
+			ArrayList<ItemStack> fixedInputs = new ArrayList<ItemStack>();
+			
+			for(Ingredient recipeItem : recipe.getIngredients())
+			{
+				ItemStack[] matches = recipeItem.getMatchingStacks();
+				if(matches == null)
+					continue;
+				if(matches.length == 1)
+				{
+					fixedInputs.add(matches[0].copy());
+					continue;
+				}
+				if(matches.length <= 0)
+					continue;
+				LinkedList<ItemStack> recipeItemOptions = new LinkedList<ItemStack>();
+				for(ItemStack option : matches)
+					recipeItemOptions.add(option.copy());
+				variableInputs.add(recipeItemOptions);
+			}
+			
+			IngredientMap<NormalizedSimpleStack> im = new IngredientMap<>();
+			for(ItemStack stack : fixedInputs)
+			{
+				if(stack.isEmpty())
+					continue;
+				try
+				{
+					if(stack.getItemDamage() != OreDictionary.WILDCARD_VALUE && stack.getItem().hasContainerItem(stack))
+						im.addIngredient(NSSItem.create(stack.getItem().getContainerItem(stack)), -1);
+					im.addIngredient(NSSItem.create(stack), cost);
+				} catch(Exception e)
+				{
+					e.printStackTrace();
+					continue;
+				}
+			}
+			for(Iterable<ItemStack> multiIngredient : variableInputs)
+			{
+				NormalizedSimpleStack dummy = NSSFake.create(multiIngredient.toString());
+				im.addIngredient(dummy, cost);
+				for(ItemStack stack : multiIngredient)
+				{
+					if(stack.isEmpty())
+						continue;
+					IngredientMap groupIngredientMap = new IngredientMap();
+					if(stack.getItem().hasContainerItem(stack))
+						groupIngredientMap.addIngredient(NSSItem.create(stack.getItem().getContainerItem(stack)), -1);
+					groupIngredientMap.addIngredient(NSSItem.create(stack), 1);
+					mapper.addConversion(1, dummy, groupIngredientMap.getMap());
+				}
+			}
+			mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, im.getMap());
 		}
 	}
 	

@@ -40,6 +40,7 @@ public class ExpansionForestry extends Expansion
 		addEMCCfg(16_384, "ProvenGrafter");
 		addEMCCfg(128, "Apatite");
 		addEMCCfg(32, "Ash");
+		addEMCCfg(128, "Peat");
 	}
 	
 	@Override
@@ -50,6 +51,7 @@ public class ExpansionForestry extends Expansion
 		addEMC(ModuleCore.items.beeswax, "Beeswax");
 		addEMC(ModuleCore.items.apatite, "Apatite");
 		addEMC(ModuleCore.items.ash, "Ash");
+		addEMC(ModuleCore.items.peat, "Peat");
 		addEMC(ModuleApiculture.getItems().honeyDrop, "HoneyDrop");
 		addEMC(ModuleApiculture.getItems().propolis, 0, "Propolis");
 		addEMC(ModuleApiculture.getItems().propolis, 1, "StickyPropolis");
