@@ -1,0 +1,47 @@
+package com.zeitheron.expequiv.exp.mysticalagriculture;
+
+import java.util.List;
+
+import com.zeitheron.expequiv.exp.Expansion;
+import com.zeitheron.expequiv.exp.ExpansionReg;
+
+import moze_intel.projecte.api.proxy.IEMCProxy;
+import moze_intel.projecte.emc.json.NormalizedSimpleStack;
+import moze_intel.projecte.emc.mappers.IEMCMapper;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+@ExpansionReg(modid = "mysticalagriculture")
+public class ExpansionMysticalAgriculture extends Expansion
+{
+	public ExpansionMysticalAgriculture(String modid, Configuration config, Object[] args)
+	{
+		super(modid, config, args);
+	}
+	
+	@Override
+	protected void addCfgEMC()
+	{
+		addEMCCfg(8, "InferiumEssence");
+		addEMCCfg(64, "ProsperityShard");
+		addEMCCfg(96, "FertilizedEssence");
+	}
+	
+	@Override
+	public void registerEMC(IEMCProxy emc)
+	{
+		Item itemCrafting = ForgeRegistries.ITEMS.getValue(new ResourceLocation("mysticalagriculture", "crafting"));
+		
+		addEMC(itemCrafting, 0, "InferiumEssence");
+		addEMC(itemCrafting, 5, "ProsperityShard");
+		addEMC(ForgeRegistries.ITEMS.getValue(new ResourceLocation("mysticalagriculture", "fertilized_essence")), "FertilizedEssence");
+	}
+	
+	@Override
+	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	{
+		mappers.add(new SeedReprocessorEMCMapper());
+	}
+}
