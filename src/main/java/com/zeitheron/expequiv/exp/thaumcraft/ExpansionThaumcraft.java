@@ -31,7 +31,7 @@ public class ExpansionThaumcraft extends Expansion
 		super(modid, config, args);
 	}
 	
-	public final Map<Aspect, Integer> defAspectCosts = new HashMap<>();
+	private final Map<Aspect, Integer> defAspectCosts = new HashMap<>();
 	public int instabilityMod;
 	
 	@Override
@@ -82,11 +82,17 @@ public class ExpansionThaumcraft extends Expansion
 		return getCfgEmc("PrimordialPearl").getValue();
 	}
 	
+	public int getAspectCost(Aspect a)
+	{
+		Integer i = defAspectCosts.getOrDefault(a, 64);
+		return i == null ? 64 : i.intValue();
+	}
+	
 	@Override
 	public void registerEMC(IEMCProxy emc)
 	{
 		for(Aspect asp : Aspect.aspects.values())
-			emc.registerCustomEMC(ThaumcraftApiHelper.makeCrystal(asp), getVisCrystalCost() + defAspectCosts.get(asp));
+			emc.registerCustomEMC(ThaumcraftApiHelper.makeCrystal(asp), getVisCrystalCost() + getAspectCost(asp));
 		addEMC(ItemsTC.nuggets, 10, "RareEarths");
 		addEMC(ItemsTC.ingots, 2, "AlchemicalBrassIngot");
 		addEMC(ItemsTC.salisMundus, "SalisMundus");

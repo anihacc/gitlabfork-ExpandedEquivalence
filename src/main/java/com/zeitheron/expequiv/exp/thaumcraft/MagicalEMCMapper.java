@@ -107,7 +107,7 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		for(Aspect a : vis.getAspects())
 		{
 			NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + a.getName() + "VisX" + vis.getAmount(a));
-			mapper.setValueBefore(fake, tc.defAspectCosts.get(a) * vis.getAmount(a));
+			mapper.setValueBefore(fake, tc.getAspectCost(a) * vis.getAmount(a));
 			ingredientMap.addIngredient(fake, 1);
 		}
 		
@@ -135,7 +135,7 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		for(Aspect a : vis.getAspects())
 		{
 			NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + a.getName() + "VisX" + vis.getAmount(a));
-			mapper.setValueBefore(fake, tc.defAspectCosts.get(a) * vis.getAmount(a));
+			mapper.setValueBefore(fake, tc.getAspectCost(a) * vis.getAmount(a));
 			ingredientMap.addIngredient(fake, 1);
 		}
 		
@@ -178,7 +178,7 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 			for(Aspect a : crystals.getAspects())
 			{
 				NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + a.getName() + "CrystalX" + crystals.getAmount(a));
-				mapper.setValueBefore(fake, tc.defAspectCosts.get(a) * crystals.getAmount(a) + tc.getVisCrystalCost());
+				mapper.setValueBefore(fake, tc.getAspectCost(a) * crystals.getAmount(a) + tc.getVisCrystalCost());
 				ingredientMap.addIngredient(fake, 1);
 			}
 		
