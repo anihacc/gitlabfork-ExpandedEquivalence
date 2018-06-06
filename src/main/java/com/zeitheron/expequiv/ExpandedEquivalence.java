@@ -126,8 +126,14 @@ public class ExpandedEquivalence
 			ex.getMappers(mappers);
 			for(IEMCMapper<NormalizedSimpleStack, Integer> m : mappers)
 			{
-				m.addMappings(mapper, ex.getConfig());
-				LOG.info("Collected Mappings from " + m.getClass().getName());
+				try
+				{
+					m.addMappings(mapper, ex.getConfig());
+					LOG.info("Collected Mappings from " + m.getClass().getName());
+				} catch(Throwable err)
+				{
+					LOG.fatal("Exception during Mapping Collection from Mapper " + m.getClass().getName() + ". PLEASE REPORT THIS! EMC VALUES MIGHT BE INCONSISTENT!", err);
+				}
 			}
 		});
 	}

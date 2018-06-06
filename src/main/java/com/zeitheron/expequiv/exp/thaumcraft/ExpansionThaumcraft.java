@@ -56,6 +56,7 @@ public class ExpansionThaumcraft extends Expansion
 		addEMCCfg(32, "VisCrystal");
 		addEMCCfg(16, "AncientStone");
 		addEMCCfg(32, "EldritchStone");
+		addEMCCfg(256 + 5 * 64, "AlchemicalBrassIngot");
 	}
 	
 	@Override
@@ -73,7 +74,12 @@ public class ExpansionThaumcraft extends Expansion
 	
 	public int getVisCrystalCost()
 	{
-		return cfgEmc.get("VisCrystal").getValue();
+		return getCfgEmc("VisCrystal").getValue();
+	}
+	
+	public int getPrimordialPearlCost()
+	{
+		return getCfgEmc("PrimordialPearl").getValue();
 	}
 	
 	@Override
@@ -82,6 +88,7 @@ public class ExpansionThaumcraft extends Expansion
 		for(Aspect asp : Aspect.aspects.values())
 			emc.registerCustomEMC(ThaumcraftApiHelper.makeCrystal(asp), getVisCrystalCost() + defAspectCosts.get(asp));
 		addEMC(ItemsTC.nuggets, 10, "RareEarths");
+		addEMC(ItemsTC.ingots, 2, "AlchemicalBrassIngot");
 		addEMC(ItemsTC.salisMundus, "SalisMundus");
 		addEMC(ItemsTC.quicksilver, "Quicksilver");
 		addEMC(ItemsTC.amber, "Amber");

@@ -48,6 +48,11 @@ public abstract class Expansion
 	{
 	}
 	
+	public ConfigEMCValue getCfgEmc(String id)
+	{
+		return cfgEmc.get(id);
+	}
+	
 	protected void addEMCCfg(int base, String id)
 	{
 		addEMCCfg(base, id, "$");
@@ -69,8 +74,7 @@ public abstract class Expansion
 		StringBuilder sb = new StringBuilder();
 		for(char c : str.toCharArray())
 		{
-			int codePoint = Character.toCodePoint(Character.toUpperCase(c), Character.toLowerCase(c));
-			if(Character.isAlphabetic(codePoint) && sb.length() > 0 && sb.charAt(sb.length() - 1) != ' ')
+			if(Character.toUpperCase(c) == c && Character.toLowerCase(c) != c && sb.length() > 0 && sb.charAt(sb.length() - 1) != ' ')
 				sb.append(' ');
 			sb.append(c);
 		}
