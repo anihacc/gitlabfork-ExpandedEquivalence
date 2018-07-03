@@ -159,6 +159,9 @@ curseforge {
             optionalLibrary 'Mystical-Agriculture'
             optionalLibrary 'Thaumcraft'
             optionalLibrary 'Base-Metals'
+            optionalLibrary 'Ender-IO'
+            optionalLibrary 'TechReborn'
+            optionalLibrary 'RebornCore'
         }
 	}
 }
