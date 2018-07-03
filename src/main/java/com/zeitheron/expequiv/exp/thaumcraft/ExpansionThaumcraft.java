@@ -18,7 +18,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
-import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.blocks.BlocksTC;
 import thaumcraft.api.items.ItemsTC;
@@ -70,6 +69,7 @@ public class ExpansionThaumcraft extends Expansion
 		conv.addConversion(1, ItemsTC.thaumonomicon, ImmutableMap.of(Blocks.BOOKSHELF, 1, ItemsTC.salisMundus, 1));
 		conv.addConversion(1, BlocksTC.crucible, ImmutableMap.of(Items.CAULDRON, 1, ItemsTC.salisMundus, 1));
 		conv.addConversion(1, BlocksTC.arcaneWorkbench, ImmutableMap.of(BlocksTC.tableWood, 1, ItemsTC.salisMundus, 1));
+		conv.addConversion(1, BlocksTC.condenserlatticeDirty, ImmutableMap.of(BlocksTC.condenserlattice, 1));
 	}
 	
 	public int getVisCrystalCost()
@@ -91,8 +91,8 @@ public class ExpansionThaumcraft extends Expansion
 	@Override
 	public void registerEMC(IEMCProxy emc)
 	{
-		for(Aspect asp : Aspect.aspects.values())
-			emc.registerCustomEMC(ThaumcraftApiHelper.makeCrystal(asp), getVisCrystalCost() + getAspectCost(asp));
+//		for(Aspect asp : Aspect.aspects.values())
+//			emc.registerCustomEMC(ThaumcraftApiHelper.makeCrystal(asp), getVisCrystalCost() + getAspectCost(asp));
 		addEMC(ItemsTC.nuggets, 10, "RareEarths");
 		addEMC(ItemsTC.ingots, 2, "AlchemicalBrassIngot");
 		addEMC(ItemsTC.salisMundus, "SalisMundus");

@@ -1,7 +1,10 @@
 package com.zeitheron.expequiv.exp.botania;
 
+import com.zeitheron.expequiv.utils.CollectingHelper;
+
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
+import moze_intel.projecte.emc.collector.LongToBigFractionCollector;
 import moze_intel.projecte.emc.json.NSSFake;
 import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
@@ -15,8 +18,10 @@ import vazkii.botania.api.recipe.RecipeManaInfusion;
 class ManaPoolEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 {
 	@Override
-	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration config)
+	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> map, Configuration config)
 	{
+		LongToBigFractionCollector<NormalizedSimpleStack, ?> mapper = CollectingHelper.getLTBFC(map);
+		
 		for(RecipeManaInfusion recipe : BotaniaAPI.manaInfusionRecipes)
 		{
 			if(recipe.getInput() instanceof ItemStack)
@@ -28,7 +33,7 @@ class ManaPoolEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 					continue;
 				
 				NormalizedSimpleStack manaCost = NSSFake.create("mana." + recipe.hashCode());
-				mapper.setValueBefore(manaCost, MathHelper.ceil(recipe.getManaToConsume() / 10F));
+				mapper.setValueBefore(manaCost, (long) MathHelper.ceil(recipe.getManaToConsume() / 10F));
 				
 				NormalizedSimpleStack out = NSSItem.create(output);
 				NormalizedSimpleStack in = NSSItem.create(input);

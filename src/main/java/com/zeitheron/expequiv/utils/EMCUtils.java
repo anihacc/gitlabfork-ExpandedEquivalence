@@ -11,7 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class EMCUtils
 {
-	public static int getEMC(Object obj)
+	public static long getEMC(Object obj)
 	{
 		if(obj instanceof Ingredient)
 			return getEMC(((Ingredient) obj).getMatchingStacks());
@@ -23,8 +23,8 @@ public class EMCUtils
 			return ProjectEAPI.getEMCProxy().getValue((Block) obj);
 		if(obj instanceof List && !((List) obj).isEmpty())
 		{
-			int least = 0;
-			int cemc;
+			long least = 0;
+			long cemc;
 			for(Object o : (List) obj)
 				if((cemc = getEMC(o)) > 0 && (cemc < least || least == 0))
 					least = cemc;
@@ -32,8 +32,8 @@ public class EMCUtils
 		}
 		if(obj instanceof ItemStack[])
 		{
-			int least = 0;
-			int cemc;
+			long least = 0;
+			long cemc;
 			for(ItemStack stack : (ItemStack[]) obj)
 				if((cemc = getEMC(stack)) > 0 && (cemc < least || least == 0))
 					least = cemc;

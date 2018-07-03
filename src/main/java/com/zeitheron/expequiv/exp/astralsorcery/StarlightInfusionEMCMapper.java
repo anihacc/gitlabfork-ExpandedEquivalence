@@ -7,11 +7,13 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import com.zeitheron.expequiv.exp.CraftingIngredients;
+import com.zeitheron.expequiv.utils.CollectingHelper;
 
 import hellfirepvp.astralsorcery.common.crafting.infusion.AbstractInfusionRecipe;
 import hellfirepvp.astralsorcery.common.crafting.infusion.InfusionRecipeRegistry;
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
+import moze_intel.projecte.emc.collector.LongToBigFractionCollector;
 import moze_intel.projecte.emc.json.NSSFake;
 import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
@@ -23,8 +25,10 @@ import net.minecraftforge.common.config.Configuration;
 class StarlightInfusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 {
 	@Override
-	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration config)
+	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> map, Configuration config)
 	{
+		LongToBigFractionCollector<NormalizedSimpleStack, ?> mapper = CollectingHelper.getLTBFC(map);
+		
 		Set<AbstractInfusionRecipe> recipes = new HashSet<>();
 		recipes.addAll(InfusionRecipeRegistry.recipes);
 		recipes.addAll(InfusionRecipeRegistry.mtRecipes);
@@ -38,13 +42,13 @@ class StarlightInfusionEMCMapper implements IEMCMapper<NormalizedSimpleStack, In
 			
 			CraftingIngredients variation = CraftingIngredients.getIngredientsFor(recipe.getInput().getApplicableItems());
 			
-			IngredientMap ingredientMap = variation.toIngredients(mapper);
+			IngredientMap ingredientMap = variation.toIngredients(map);
 			
 			if(ingredientMap == null)
 				continue;
 			
 			NormalizedSimpleStack additionalEMC = NSSFake.create(recipe.toString());
-			mapper.setValueBefore(additionalEMC, (int) (1000 * recipe.getLiquidStarlightConsumptionChance()));
+			mapper.setValueBefore(additionalEMC, (long) (1000 * recipe.getLiquidStarlightConsumptionChance()));
 			ingredientMap.addIngredient(additionalEMC, 1);
 			
 			mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, ingredientMap.getMap());

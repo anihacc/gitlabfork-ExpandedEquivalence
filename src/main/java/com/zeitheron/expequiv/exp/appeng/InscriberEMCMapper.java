@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.endie.lib.fast.lists.IntArrayList;
-import com.endie.lib.fast.lists.IntList;
-
 import appeng.api.AEApi;
 import appeng.api.features.IInscriberRecipe;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
 import moze_intel.projecte.emc.json.NSSItem;
@@ -28,10 +27,10 @@ class InscriberEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		Function<String, Item> find = reg -> ForgeRegistries.ITEMS.getValue(new ResourceLocation("appliedenergistics2", reg));
 		Item material = find.apply("material");
 		IntList presses = new IntArrayList();
-		presses.addInt(13);
-		presses.addInt(14);
-		presses.addInt(15);
-		presses.addInt(19);
+		presses.add(13);
+		presses.add(14);
+		presses.add(15);
+		presses.add(19);
 		
 		for(IInscriberRecipe recipe : AEApi.instance().registries().inscriber().getRecipes())
 		{

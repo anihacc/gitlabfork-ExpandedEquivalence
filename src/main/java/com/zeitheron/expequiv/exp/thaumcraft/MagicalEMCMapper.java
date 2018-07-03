@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.UUID;
 
 import com.zeitheron.expequiv.exp.CraftingIngredients;
+import com.zeitheron.expequiv.utils.CollectingHelper;
 
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
+import moze_intel.projecte.emc.collector.LongToBigFractionCollector;
 import moze_intel.projecte.emc.json.NSSFake;
 import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
@@ -61,8 +63,10 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		}
 	}
 	
-	public void mapInfusionRecipe(IMappingCollector<NormalizedSimpleStack, Integer> mapper, InfusionRecipe recipe)
+	public void mapInfusionRecipe(IMappingCollector<NormalizedSimpleStack, Integer> map, InfusionRecipe recipe)
 	{
+		LongToBigFractionCollector<NormalizedSimpleStack, ?> mapper = CollectingHelper.getLTBFC(map);
+		
 		ItemStack recipeOutput = ItemStack.EMPTY;
 		{
 			Object o = recipe.getRecipeOutput();
@@ -91,7 +95,7 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 			}
 		
 		CraftingIngredients variation = CraftingIngredients.getIngredientsFor(items);
-		IngredientMap ingredientMap = variation.toIngredients(mapper);
+		IngredientMap ingredientMap = variation.toIngredients(map);
 		
 		if(ingredientMap == null)
 			return;
@@ -99,7 +103,7 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		if(pearls > 0)
 		{
 			NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + "PrimPearls");
-			mapper.setValueBefore(fake, pearls * tc.getPrimordialPearlCost() / ItemsTC.primordialPearl.getMaxDamage(primPearl));
+			mapper.setValueBefore(fake, (long) (pearls * tc.getPrimordialPearlCost() / ItemsTC.primordialPearl.getMaxDamage(primPearl)));
 			ingredientMap.addIngredient(fake, 1);
 		}
 		
@@ -107,26 +111,28 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		for(Aspect a : vis.getAspects())
 		{
 			NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + a.getName() + "VisX" + vis.getAmount(a));
-			mapper.setValueBefore(fake, tc.getAspectCost(a) * vis.getAmount(a));
+			mapper.setValueBefore(fake, (long) (tc.getAspectCost(a) * vis.getAmount(a)));
 			ingredientMap.addIngredient(fake, 1);
 		}
 		
 		NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + "Instability");
-		mapper.setValueBefore(fake, tc.instabilityMod * recipe.instability);
+		mapper.setValueBefore(fake, (long) (tc.instabilityMod * recipe.instability));
 		ingredientMap.addIngredient(fake, 1);
 		
 		mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, ingredientMap.getMap());
 	}
 	
-	public void mapCrucibleRecipe(IMappingCollector<NormalizedSimpleStack, Integer> mapper, CrucibleRecipe recipe)
+	public void mapCrucibleRecipe(IMappingCollector<NormalizedSimpleStack, Integer> map, CrucibleRecipe recipe)
 	{
+		LongToBigFractionCollector<NormalizedSimpleStack, ?> mapper = CollectingHelper.getLTBFC(map);
+		
 		ItemStack recipeOutput = recipe.getRecipeOutput();
 		if(recipeOutput.isEmpty())
 			return;
 		NormalizedSimpleStack recipeOutputNorm = NSSItem.create(recipeOutput);
 		
 		CraftingIngredients variation = CraftingIngredients.getIngredientsFor(Arrays.asList(recipe.getCatalyst()));
-		IngredientMap ingredientMap = variation.toIngredients(mapper);
+		IngredientMap ingredientMap = variation.toIngredients(map);
 		
 		if(ingredientMap == null)
 			return;
@@ -135,15 +141,17 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		for(Aspect a : vis.getAspects())
 		{
 			NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + a.getName() + "VisX" + vis.getAmount(a));
-			mapper.setValueBefore(fake, tc.getAspectCost(a) * vis.getAmount(a));
+			mapper.setValueBefore(fake, (long) (tc.getAspectCost(a) * vis.getAmount(a)));
 			ingredientMap.addIngredient(fake, 1);
 		}
 		
 		mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, ingredientMap.getMap());
 	}
 	
-	public void mapArcaneRecipe(IMappingCollector<NormalizedSimpleStack, Integer> mapper, IArcaneRecipe recipe)
+	public void mapArcaneRecipe(IMappingCollector<NormalizedSimpleStack, Integer> map, IArcaneRecipe recipe)
 	{
+		LongToBigFractionCollector<NormalizedSimpleStack, ?> mapper = CollectingHelper.getLTBFC(map);
+		
 		ItemStack recipeOutput = recipe.getRecipeOutput();
 		if(recipeOutput.isEmpty())
 			return;
@@ -161,7 +169,7 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 			}
 		
 		CraftingIngredients variation = CraftingIngredients.getIngredientsFor(items);
-		IngredientMap ingredientMap = variation.toIngredients(mapper);
+		IngredientMap ingredientMap = variation.toIngredients(map);
 		
 		if(ingredientMap == null)
 			return;
@@ -169,7 +177,7 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 		if(pearls > 0)
 		{
 			NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + "PrimPearls");
-			mapper.setValueBefore(fake, pearls * tc.getPrimordialPearlCost() / ItemsTC.primordialPearl.getMaxDamage(primPearl));
+			mapper.setValueBefore(fake, (long) (pearls * tc.getPrimordialPearlCost() / ItemsTC.primordialPearl.getMaxDamage(primPearl)));
 			ingredientMap.addIngredient(fake, 1);
 		}
 		
@@ -178,7 +186,7 @@ class MagicalEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 			for(Aspect a : crystals.getAspects())
 			{
 				NormalizedSimpleStack fake = NSSFake.create(UUID.randomUUID() + a.getName() + "CrystalX" + crystals.getAmount(a));
-				mapper.setValueBefore(fake, tc.getAspectCost(a) * crystals.getAmount(a) + tc.getVisCrystalCost());
+				mapper.setValueBefore(fake, (long) (tc.getAspectCost(a) + tc.getVisCrystalCost()) * crystals.getAmount(a));
 				ingredientMap.addIngredient(fake, 1);
 			}
 		

@@ -33,7 +33,7 @@ public class ExpansionIC2 extends Expansion implements IEMCMapper<NormalizedSimp
 	@Override
 	protected void addCfgEMC()
 	{
-		addEMCCfg(16384, "IdiriumOre");
+		addEMCCfg(32 * 1024, "IridiumOre");
 		addEMCCfg(320, "SteelIngot");
 	}
 	

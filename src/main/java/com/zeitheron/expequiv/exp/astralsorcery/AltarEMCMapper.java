@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.zeitheron.expequiv.exp.CraftingIngredients;
+import com.zeitheron.expequiv.utils.CollectingHelper;
 
 import hellfirepvp.astralsorcery.common.crafting.altar.AbstractAltarRecipe;
 import hellfirepvp.astralsorcery.common.crafting.altar.AltarRecipeRegistry;
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
+import moze_intel.projecte.emc.collector.LongToBigFractionCollector;
 import moze_intel.projecte.emc.json.NSSFake;
 import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
@@ -19,8 +21,10 @@ import net.minecraftforge.common.config.Configuration;
 class AltarEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 {
 	@Override
-	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration config)
+	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> map, Configuration config)
 	{
+		LongToBigFractionCollector<NormalizedSimpleStack, ?> mapper = CollectingHelper.getLTBFC(map);
+		
 		Set<AbstractAltarRecipe> recipes = new HashSet<>();
 		AltarRecipeRegistry.recipes.values().forEach(recipes::addAll);
 		AltarRecipeRegistry.mtRecipes.values().forEach(recipes::addAll);
@@ -34,13 +38,13 @@ class AltarEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 			
 			CraftingIngredients variation = CraftingIngredients.getIngredientsFor(recipe.getNativeRecipe().getIngredients());
 			
-			IngredientMap ingredientMap = variation.toIngredients(mapper);
+			IngredientMap ingredientMap = variation.toIngredients(map);
 			
 			if(ingredientMap == null)
 				continue;
 			
 			NormalizedSimpleStack additionalEMC = NSSFake.create(recipe.toString());
-			mapper.setValueBefore(additionalEMC, (int) (100 * recipe.getCraftExperience() * recipe.getCraftExperienceMultiplier()));
+			mapper.setValueBefore(additionalEMC, (long) (100 * recipe.getCraftExperience() * recipe.getCraftExperienceMultiplier()));
 			ingredientMap.addIngredient(additionalEMC, 1);
 			
 			mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, ingredientMap.getMap());

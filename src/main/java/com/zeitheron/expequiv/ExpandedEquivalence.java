@@ -8,9 +8,9 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pengu.hammercore.HammerCore;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.HammerCore;
 
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.emc.collector.IMappingCollector;

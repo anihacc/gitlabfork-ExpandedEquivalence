@@ -1,24 +1,37 @@
 package com.zeitheron.expequiv.exp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import moze_intel.projecte.emc.IngredientMap;
 import moze_intel.projecte.emc.collector.IMappingCollector;
 import moze_intel.projecte.emc.json.NSSFake;
+import moze_intel.projecte.emc.json.NSSFluid;
 import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class CraftingIngredients
 {
 	public final Iterable<ItemStack> fixedIngredients;
 	public final Iterable<Iterable<ItemStack>> multiIngredients;
+	
+	public final Map<NormalizedSimpleStack, Integer> additional = new HashMap<>();
+	
+	public void add(NormalizedSimpleStack nss, int amount)
+	{
+		if(additional.containsKey(nss))
+			amount += additional.get(nss);
+		additional.put(nss, amount);
+	}
 	
 	public CraftingIngredients(Iterable<ItemStack> fixedIngredients, Iterable<Iterable<ItemStack>> multiIngredients)
 	{
@@ -29,6 +42,9 @@ public class CraftingIngredients
 	public IngredientMap<NormalizedSimpleStack> toIngredients(IMappingCollector<NormalizedSimpleStack, Integer> mapper)
 	{
 		IngredientMap<NormalizedSimpleStack> im = new IngredientMap<>();
+		
+		for(NormalizedSimpleStack a : additional.keySet())
+			im.addIngredient(a, additional.get(a));
 		
 		for(ItemStack stack : fixedIngredients)
 		{
@@ -88,6 +104,7 @@ public class CraftingIngredients
 		if(fixedIngredients != null)
 			for(ItemStack f : fixedIngredients)
 				fixedInputs.add(f.copy());
+		CraftingIngredients ci = new CraftingIngredients(fixedInputs, variableInputs);
 		if(ingredients != null)
 			for(Object recipeItem : ingredients)
 			{
@@ -101,6 +118,8 @@ public class CraftingIngredients
 						matches = OreDictionary.getOres((String) recipeItem).toArray(new ItemStack[0]);
 					if(recipeItem instanceof List)
 						matches = ((List<ItemStack>) recipeItem).toArray(new ItemStack[0]);
+					if(recipeItem instanceof FluidStack)
+						ci.add(NSSFluid.create(((FluidStack) recipeItem).getFluid()), ((FluidStack) recipeItem).amount);
 					
 					if(matches == null)
 						continue;
@@ -122,6 +141,6 @@ public class CraftingIngredients
 				else if(recipeItem instanceof Block)
 					fixedInputs.add(new ItemStack((Block) recipeItem));
 			}
-		return new CraftingIngredients(fixedInputs, variableInputs);
+		return ci;
 	}
 }

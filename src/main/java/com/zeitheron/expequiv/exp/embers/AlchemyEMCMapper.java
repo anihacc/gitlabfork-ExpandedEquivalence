@@ -15,7 +15,6 @@ import teamroots.embers.recipe.RecipeRegistry;
 
 class AlchemyEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 {
-
 	@Override
 	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration cfg)
 	{

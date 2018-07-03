@@ -4,7 +4,9 @@ import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
 
 import moze_intel.projecte.api.proxy.IEMCProxy;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 
@@ -23,6 +25,8 @@ public class ExpansionMinecraft extends Expansion
 		addEMCCfg(864, "XPBottle", "Bottle o' Enchanting");
 		addEMCCfg(65536, "Elytra");
 		addEMCCfg(1024 * 50, "TotemOfUndying");
+		addEMCCfg(1024 * 48, "WitherSkeletonSkull");
+		addEMCCfg(1024 * 192, "DragonHead");
 	}
 	
 	@Override
@@ -32,5 +36,7 @@ public class ExpansionMinecraft extends Expansion
 		addEMC(Items.EXPERIENCE_BOTTLE, "XPBottle");
 		addEMC(Items.ELYTRA, "Elytra");
 		addEMC(Items.TOTEM_OF_UNDYING, "TotemOfUndying");
+		addEMC(Item.getItemFromBlock(Blocks.SKULL), 1, "WitherSkeletonSkull");
+		addEMC(Item.getItemFromBlock(Blocks.SKULL), 5, "DragonHead");
 	}
 }

@@ -1,7 +1,14 @@
 package com.zeitheron.expequiv.exp.botania;
 
+import java.lang.reflect.Field;
+
+import com.zeitheron.expequiv.utils.CollectingHelper;
+
 import moze_intel.projecte.emc.IngredientMap;
+import moze_intel.projecte.emc.collector.IExtendedMappingCollector;
 import moze_intel.projecte.emc.collector.IMappingCollector;
+import moze_intel.projecte.emc.collector.LongToBigFractionCollector;
+import moze_intel.projecte.emc.collector.WildcardSetValueFixCollector;
 import moze_intel.projecte.emc.json.NSSFake;
 import moze_intel.projecte.emc.json.NSSItem;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
@@ -17,13 +24,16 @@ import vazkii.botania.common.item.ModItems;
 class TerrestrialEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 {
 	@Override
-	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration config)
+	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> map, Configuration config)
 	{
+		LongToBigFractionCollector<NormalizedSimpleStack, ?> mapper = CollectingHelper.getLTBFC(map);
+		
 		ItemStack output = new ItemStack(ModItems.manaResource, 1, 4);
 		int mana = 600_000;
 		
 		NormalizedSimpleStack manaCost = NSSFake.create("mana." + output.hashCode());
-		mapper.setValueBefore(manaCost, MathHelper.ceil(mana / 10F));
+		
+		mapper.setValueBefore(manaCost, (long) MathHelper.ceil(mana / 10F));
 		
 		IngredientMap<NormalizedSimpleStack> im = new IngredientMap<>();
 		addInput(new ItemStack(ModItems.manaResource, 1, 0), im);
