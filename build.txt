@@ -6,14 +6,14 @@ git_commit=https://gitlab.com/Zeitheron/ExpandedEquivalence/commit/{{hash}}
 #Runtime info
 forge_version=14.23.4.2705
 minecraft_version=1.12.2
-mcp=snapshot_20170624
-hc_version=2.0.0.1
+mcp=snapshot_20180803
+hc_version=2.0.2.3
 jei_version=4.8.5.159
 
 #Mod info
 mod_id=expequiv
 mod_id_fancy=ExpandedEquivalence
 mod_name=Expanded Equivalence
-mod_version=10a
+mod_version=11b
 cf_project=295222
-release_type=alpha
+release_type=beta

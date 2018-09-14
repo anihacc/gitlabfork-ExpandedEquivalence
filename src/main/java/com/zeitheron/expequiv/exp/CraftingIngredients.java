@@ -97,6 +97,22 @@ public class CraftingIngredients
 		return dummy;
 	}
 	
+	public static NormalizedSimpleStack createFromMultipleItems(IMappingCollector<NormalizedSimpleStack, Integer> mapper, ItemStack... multi)
+	{
+		NormalizedSimpleStack dummy = NSSFake.create(multi.toString());
+		for(ItemStack stack : multi)
+		{
+			if(stack.isEmpty())
+				continue;
+			IngredientMap groupIngredientMap = new IngredientMap();
+			if(stack.getItem().hasContainerItem(stack))
+				groupIngredientMap.addIngredient(NSSItem.create(stack.getItem().getContainerItem(stack)), -1);
+			groupIngredientMap.addIngredient(NSSItem.create(stack), 1);
+			mapper.addConversion(1, dummy, groupIngredientMap.getMap());
+		}
+		return dummy;
+	}
+	
 	public static CraftingIngredients getIngredientsFor(Iterable<? extends Object> ingredients, ItemStack... fixedIngredients)
 	{
 		ArrayList<Iterable<ItemStack>> variableInputs = new ArrayList<Iterable<ItemStack>>();

@@ -1,5 +1,7 @@
 package com.zeitheron.expequiv.exp.actuallyadditions;
 
+import com.zeitheron.expequiv.exp.CraftingIngredients;
+
 import de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI;
 import de.ellpeck.actuallyadditions.api.recipe.EmpowererRecipe;
 import de.ellpeck.actuallyadditions.api.recipe.LensConversionRecipe;
@@ -18,22 +20,21 @@ class EmpowererEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
 	{
 		for(EmpowererRecipe recipe : ActuallyAdditionsAPI.EMPOWERER_RECIPES)
 		{
-			ItemStack recipeOutput = recipe.output;
+			ItemStack recipeOutput = recipe.getOutput();
 			if(recipeOutput.isEmpty())
 				continue;
 			NormalizedSimpleStack recipeOutputNorm = NSSItem.create(recipeOutput);
 			IngredientMap im = new IngredientMap();
 			
-			if(!recipe.input.isEmpty())
-				im.addIngredient(NSSItem.create(recipe.input), recipe.input.getCount());
-			if(!recipe.modifier1.isEmpty())
-				im.addIngredient(NSSItem.create(recipe.modifier1), recipe.modifier1.getCount());
-			if(!recipe.modifier2.isEmpty())
-				im.addIngredient(NSSItem.create(recipe.modifier2), recipe.modifier2.getCount());
-			if(!recipe.modifier3.isEmpty())
-				im.addIngredient(NSSItem.create(recipe.modifier3), recipe.modifier3.getCount());
-			if(!recipe.modifier4.isEmpty())
-				im.addIngredient(NSSItem.create(recipe.modifier4), recipe.modifier4.getCount());
+			im.addIngredient(CraftingIngredients.createFromMultipleItems(mapper, recipe.getInput().getMatchingStacks()), 1);
+			if(recipe.getStandOne() != null)
+				im.addIngredient(CraftingIngredients.createFromMultipleItems(mapper, recipe.getStandOne().getMatchingStacks()), 1);
+			if(recipe.getStandTwo() != null)
+				im.addIngredient(CraftingIngredients.createFromMultipleItems(mapper, recipe.getStandTwo().getMatchingStacks()), 1);
+			if(recipe.getStandThree() != null)
+				im.addIngredient(CraftingIngredients.createFromMultipleItems(mapper, recipe.getStandThree().getMatchingStacks()), 1);
+			if(recipe.getStandFour() != null)
+				im.addIngredient(CraftingIngredients.createFromMultipleItems(mapper, recipe.getStandFour().getMatchingStacks()), 1);
 			
 			mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, im.getMap());
 		}
