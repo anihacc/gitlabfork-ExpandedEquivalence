@@ -8,17 +8,15 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.zeitheron.expequiv.api.IEMC;
+import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
 import com.zeitheron.hammercore.HammerCore;
 
 import moze_intel.projecte.api.ProjectEAPI;
-import moze_intel.projecte.emc.collector.IMappingCollector;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 import moze_intel.projecte.impl.EMCProxyImpl;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -85,9 +83,9 @@ public class ExpandedEquivalence
 		
 		File cfgDir = e.getSuggestedConfigurationFile();
 		String path = cfgDir.getAbsolutePath();
-		path = path.substring(0, path.length() - 4);
+		path = path.substring(0, path.lastIndexOf(File.separator));
 		
-		final File cfgsDir = new File(path);
+		final File cfgsDir = new File(path, "Expanded Equivalence");
 		if(!cfgsDir.isDirectory())
 			cfgsDir.mkdirs();
 		
@@ -116,23 +114,20 @@ public class ExpandedEquivalence
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		expansions.forEach(ex -> ex.postInit(EMCProxyImpl.instance, ProjectEAPI.getTransmutationProxy()));
-	}
-	
-	public static void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration config)
-	{
+		
 		instance.expansions.forEach(ex ->
 		{
-			List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers = new ArrayList<>();
-			ex.getMappers(mappers);
-			for(IEMCMapper<NormalizedSimpleStack, Integer> m : mappers)
+			List<IEMCConverter> mappers = new ArrayList<>();
+			ex.getConverters(mappers);
+			for(IEMCConverter m : mappers)
 			{
 				try
 				{
-					m.addMappings(mapper, ex.getConfig());
-					LOG.info("Collected Mappings from " + m.getClass().getName());
+					m.register(IEMC.PE_WRAPPER, ex.getConfig());
+					LOG.info("Collected EMC convertions from " + m.getClass().getName());
 				} catch(Throwable err)
 				{
-					LOG.fatal("Exception during Mapping Collection from Mapper " + m.getClass().getName() + ". PLEASE REPORT THIS! EMC VALUES MIGHT BE INCONSISTENT!", err);
+					LOG.fatal("Exception while gathering EMC convertions from converter " + m.getClass().getName() + ". PLEASE REPORT THIS! EMC VALUES MIGHT BE INCONSISTENT!", err);
 				}
 			}
 		});

@@ -8,18 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 import com.zeitheron.expequiv.ExpandedEquivalence;
+import com.zeitheron.expequiv.api.IEMCConverter;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 import moze_intel.projecte.impl.EMCProxyImpl;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 
 public abstract class Expansion
@@ -66,7 +63,7 @@ public abstract class Expansion
 	
 	protected int getCfgEMC(int base, String id, String name)
 	{
-		return config.getInt(id, "EMC", base, 0, Integer.MAX_VALUE, "Base cost for " + name + ". Set to 0 to disable.");
+		return config.getCategory("EMC").getIntEntry(id, base, 0, Integer.MAX_VALUE).setDescription("Base cost for " + name + ". Set to 0 to disable.").getValue();
 	}
 	
 	private static String splitName(String str)
@@ -116,7 +113,7 @@ public abstract class Expansion
 					File cfgFile = new File(subMod, c.getSimpleName() + ".cfg");
 					Configuration cfg = new Configuration(cfgFile);
 					Expansion ex = exp.newInstance(modid, cfg, args);
-					boolean b = ex.getConfig().getBoolean("Enabled", "Base", true, "Enable this part of ExpandedEquivalence");
+					boolean b = ex.getConfig().getCategory("Base").getBooleanEntry("Enabled", true).setDescription("Enable this part of ExpandedEquivalence").getValue();
 					if(cfg.hasChanged())
 						cfg.save();
 					if(b)
@@ -174,7 +171,7 @@ public abstract class Expansion
 		return add;
 	}
 	
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	public void getConverters(List<IEMCConverter> mappers)
 	{
 		
 	}

@@ -2,16 +2,15 @@ package com.zeitheron.expequiv.exp.actuallyadditions;
 
 import java.util.List;
 
+import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import de.ellpeck.actuallyadditions.mod.blocks.InitBlocks;
 import de.ellpeck.actuallyadditions.mod.items.InitItems;
 import moze_intel.projecte.api.proxy.IEMCProxy;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.config.Configuration;
 
 @ExpansionReg(modid = "actuallyadditions")
 public class ExpansionActuallyAdditions extends Expansion
@@ -44,9 +43,9 @@ public class ExpansionActuallyAdditions extends Expansion
 	}
 	
 	@Override
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	public void getConverters(List<IEMCConverter> mappers)
 	{
-		mappers.add(new LaserEMCMapper());
-		mappers.add(new EmpowererEMCMapper());
+		mappers.add(new LaserEMCConverter());
+		mappers.add(new EmpowererEMCConverter());
 	}
 }

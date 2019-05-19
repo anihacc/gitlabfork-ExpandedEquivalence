@@ -2,15 +2,16 @@ package com.zeitheron.expequiv.exp.immersiveengineering;
 
 import java.util.List;
 
+import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.config.Configuration;
 
 @ExpansionReg(modid = "immersiveengineering")
 public class ExpansionImmersiveEngineering extends Expansion
@@ -46,13 +47,13 @@ public class ExpansionImmersiveEngineering extends Expansion
 	}
 	
 	@Override
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	public void getConverters(List<IEMCConverter> mappers)
 	{
+		mappers.add(new BlastFurnaceEMCConverter());
+		mappers.add(new CokeEMCConverter());
+		mappers.add(new CrusherEMCConverter());
+		mappers.add(new EnginnerWorkbenchEMCConverter());
 		mappers.add(new KilnEMCMapper());
-		mappers.add(new BlastFurnaceEMCMapper());
-		mappers.add(new CokeEMCMapper());
-		mappers.add(new MetalPressEMCMapper());
-		mappers.add(new CrusherEMCMapper());
-		mappers.add(new EnginnerWorkbenchEMCMapper());
+		mappers.add(new MetalPressEMCConverter());
 	}
 }

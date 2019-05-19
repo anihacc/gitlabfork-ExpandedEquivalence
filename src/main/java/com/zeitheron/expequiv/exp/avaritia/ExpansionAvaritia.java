@@ -1,17 +1,14 @@
 package com.zeitheron.expequiv.exp.avaritia;
 
+import java.util.List;
+
+import com.zeitheron.expequiv.api.IEMCConverter;
+import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import morph.avaritia.init.ModItems;
 import moze_intel.projecte.api.proxy.IEMCProxy;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
-
-import java.util.List;
-
-import com.zeitheron.expequiv.exp.Expansion;
 
 @ExpansionReg(modid = "avaritia")
 public class ExpansionAvaritia extends Expansion
@@ -34,9 +31,9 @@ public class ExpansionAvaritia extends Expansion
 	}
 	
 	@Override
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	public void getConverters(List<IEMCConverter> mappers)
 	{
-		mappers.add(new CompressionEMCMapper());
-		mappers.add(new ExtremeEMCMapper());
+		mappers.add(new CompressionEMCConverter());
+		mappers.add(new ExtremeEMCConverter());
 	}
 }

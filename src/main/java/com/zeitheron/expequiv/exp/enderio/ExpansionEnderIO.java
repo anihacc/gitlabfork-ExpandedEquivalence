@@ -1,17 +1,22 @@
 package com.zeitheron.expequiv.exp.enderio;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.zeitheron.expequiv.api.CountedIngredient;
+import com.zeitheron.expequiv.api.FakeItem;
+import com.zeitheron.expequiv.api.IEMC;
+import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
-import com.zeitheron.expequiv.exp.reborncore.RebornCoreEMCMapper;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
+import crazypants.enderio.base.recipe.IManyToOneRecipe;
+import crazypants.enderio.base.recipe.IRecipeInput;
 import moze_intel.projecte.api.proxy.IEMCProxy;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 @ExpansionReg(modid = "enderio")
@@ -50,13 +55,31 @@ public class ExpansionEnderIO extends Expansion
 	}
 	
 	@Override
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	public void getConverters(List<IEMCConverter> mappers)
 	{
-		mappers.add(new AlloySmelterEMCMapper());
-		mappers.add(new SAGEMCMapper());
-		mappers.add(new SliceNSpliceEMCMapper());
-		mappers.add(new VatEMCMapper());
-		
-		mappers.add(new RebornCoreEMCMapper());
+		mappers.add(new AlloySmelterEMCConverter());
+		mappers.add(new SAGEMCConverter());
+		mappers.add(new SliceNSpliceEMCConverter());
+		mappers.add(new VatEMCConverter());
+	}
+	
+	static List<CountedIngredient> inputsToIngs(IEMC emc, IRecipeInput... inputs)
+	{
+		List<CountedIngredient> ci = new ArrayList<>();
+		for(IRecipeInput in : inputs)
+		{
+			if(in.getFluidInput() != null)
+				ci.add(CountedIngredient.create(in.getFluidInput()));
+			if(in.getEquivelentInputs() != null && in.getEquivelentInputs().length > 0)
+				ci.add(FakeItem.create(emc, 1, Ingredient.fromStacks(in.getEquivelentInputs())));
+			else if(!in.getInput().isEmpty())
+				ci.add(CountedIngredient.create(in.getInput()));
+		}
+		return ci;
+	}
+	
+	static void handleMtO(IEMC emc, IManyToOneRecipe r)
+	{
+		emc.map(r.getOutput(), inputsToIngs(emc, r.getInputs()));
 	}
 }

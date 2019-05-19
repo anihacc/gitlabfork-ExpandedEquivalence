@@ -2,12 +2,13 @@ package com.zeitheron.expequiv.exp.compactmachines3;
 
 import java.util.List;
 
+import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
-import net.minecraftforge.common.config.Configuration;
 
 @ExpansionReg(modid = "compactmachines3")
 public class ExpansionCompactMachines extends Expansion
@@ -18,8 +19,8 @@ public class ExpansionCompactMachines extends Expansion
 	}
 	
 	@Override
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	public void getConverters(List<IEMCConverter> mappers)
 	{
-		mappers.add(new MiniaturizationEMCMapper());
+		mappers.add(new MiniaturizationEMCConverter());
 	}
 }

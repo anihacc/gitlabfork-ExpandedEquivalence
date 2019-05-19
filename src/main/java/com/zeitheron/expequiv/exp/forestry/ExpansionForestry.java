@@ -2,20 +2,17 @@ package com.zeitheron.expequiv.exp.forestry;
 
 import java.util.List;
 
+import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import forestry.apiculture.ModuleApiculture;
 import forestry.arboriculture.ModuleArboriculture;
 import forestry.core.ModuleCore;
-import forestry.cultivation.ModuleCultivation;
-import forestry.food.ModuleFood;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
 
 @ExpansionReg(modid = "forestry")
 public class ExpansionForestry extends Expansion
@@ -63,10 +60,10 @@ public class ExpansionForestry extends Expansion
 	}
 	
 	@Override
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	public void getConverters(List<IEMCConverter> mappers)
 	{
-		mappers.add(new CarpenterEMCMapper());
-		mappers.add(new ThermionicEMCMapper());
-		mappers.add(new MoistenerEMCMapper());
+		mappers.add(new CarpenterEMCConverter());
+		mappers.add(new ThermionicEMCConverter());
+		mappers.add(new MoistenerEMCConverter());
 	}
 }

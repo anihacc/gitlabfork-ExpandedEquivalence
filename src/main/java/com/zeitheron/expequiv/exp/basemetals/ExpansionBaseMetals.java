@@ -5,13 +5,13 @@ import java.util.function.Function;
 
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 @ExpansionReg(modid = "basemetals")
@@ -58,11 +58,5 @@ public class ExpansionBaseMetals extends Expansion
 		addEMC(find.apply("starsteel_ingot"), "StarSteelIngot");
 		addEMC(find.apply("steel_ingot"), "SteelIngot");
 		addEMC(find.apply("zinc_ingot"), "ZincIngot");
-	}
-	
-	@Override
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
-	{
-		
 	}
 }

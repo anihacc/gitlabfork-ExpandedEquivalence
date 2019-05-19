@@ -67,8 +67,8 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "hammer-core:HammerCore-${config.minecraft_version}:${config.hc_version}:deobf"
-    deobfCompile "cofh:RedstoneFlux:1.12-2.0.1.2:universal"
+	deobfCompile "hammer-lib:HammerCore-${config.minecraft_version}:${config.hc_version}:deobf"
+    deobfCompile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
 	
     deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}:api"
     runtime "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
@@ -95,8 +95,6 @@ task deobfJar(type: Jar) {
     classifier = 'deobf'
     manifest {
         attributes 'FMLAT': "${config.mod_id}_at.cfg"
-        attributes 'FMLCorePlugin': 'com.zeitheron.expequiv.core.EECore'
-        attributes 'FMLCorePluginContainsFMLMod': 'false'
     }
 }
 
@@ -105,16 +103,12 @@ task srcJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
 	manifest {
         attributes 'FMLAT': "${config.mod_id}_at.cfg"
-        attributes 'FMLCorePlugin': 'com.zeitheron.expequiv.core.EECore'
-        attributes 'FMLCorePluginContainsFMLMod': 'false'
     }
 }
 
 jar {
 	manifest {
 		attributes 'FMLAT': "${config.mod_id}_at.cfg"
-        attributes 'FMLCorePlugin': 'com.zeitheron.expequiv.core.EECore'
-        attributes 'FMLCorePluginContainsFMLMod': 'false'
 	}
 }
 
@@ -141,7 +135,7 @@ curseforge {
 		  displayName = "[${config.minecraft_version}] ${config.mod_name} (Sources) - ${config.mod_version}"
 		}
 		relations {
-            requiredLibrary 'Hammer-Core'
+            requiredLibrary 'Hammer-Lib'
             
             optionalLibrary 'ThermalExpansion'
             optionalLibrary 'Actually-Additions'

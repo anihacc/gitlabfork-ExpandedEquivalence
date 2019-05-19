@@ -2,13 +2,12 @@ package com.zeitheron.expequiv.exp.minecraft;
 
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
 
 @ExpansionReg(modid = "minecraft")
 public class ExpansionMinecraft extends Expansion
@@ -27,6 +26,7 @@ public class ExpansionMinecraft extends Expansion
 		addEMCCfg(1024 * 50, "TotemOfUndying");
 		addEMCCfg(1024 * 48, "WitherSkeletonSkull");
 		addEMCCfg(1024 * 192, "DragonHead");
+		addEMCCfg(1536 / 5, "BlazePowder");
 	}
 	
 	@Override
@@ -38,5 +38,6 @@ public class ExpansionMinecraft extends Expansion
 		addEMC(Items.TOTEM_OF_UNDYING, "TotemOfUndying");
 		addEMC(Item.getItemFromBlock(Blocks.SKULL), 1, "WitherSkeletonSkull");
 		addEMC(Item.getItemFromBlock(Blocks.SKULL), 5, "DragonHead");
+		addEMC(Items.BLAZE_POWDER, "BlazePowder");
 	}
 }

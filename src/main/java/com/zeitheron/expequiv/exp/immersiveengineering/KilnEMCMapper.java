@@ -4,57 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.zeitheron.expequiv.exp.CraftingIngredients;
+import com.zeitheron.expequiv.api.CountedIngredient;
+import com.zeitheron.expequiv.api.FakeItem;
+import com.zeitheron.expequiv.api.IEMC;
+import com.zeitheron.expequiv.api.IEMCConverter;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import blusunrize.immersiveengineering.api.crafting.AlloyRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import moze_intel.projecte.emc.IngredientMap;
-import moze_intel.projecte.emc.collector.IMappingCollector;
-import moze_intel.projecte.emc.json.NSSItem;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraft.item.crafting.Ingredient;
 
-class KilnEMCMapper implements IEMCMapper<NormalizedSimpleStack, Integer>
+class KilnEMCMapper implements IEMCConverter
 {
 	@Override
-	public void addMappings(IMappingCollector<NormalizedSimpleStack, Integer> mapper, Configuration cfg)
+	public void register(IEMC emc, Configuration cfg)
 	{
 		for(AlloyRecipe recipe : AlloyRecipe.recipeList)
 		{
 			ItemStack recipeOutput = recipe.output;
 			if(recipeOutput.isEmpty())
 				continue;
-			NormalizedSimpleStack recipeOutputNorm = NSSItem.create(recipeOutput);
+			
 			List<IngredientStack> inputs = new ArrayList<>();
 			if(recipe.input0 != null)
 				inputs.add(recipe.input0);
 			if(recipe.input1 != null)
 				inputs.add(recipe.input1);
-			CraftingIngredients variation = CraftingIngredients.getIngredientsFor(inputs.stream().map(is -> is.getSizedStackList()).collect(Collectors.toList()));
-			IngredientMap ingredientMap = variation.toIngredients(mapper);
-			if(ingredientMap == null)
-				continue;
-			mapper.addConversion(recipeOutput.getCount(), recipeOutputNorm, ingredientMap.getMap());
+			
+			List<CountedIngredient> ci = new ArrayList<>();
+			for(List<ItemStack> ingredient : inputs.stream().map(is -> is.getStackList()).collect(Collectors.toList()))
+				ci.add(FakeItem.create(emc, 1, Ingredient.fromStacks(ingredient.toArray(new ItemStack[ingredient.size()]))));
+			emc.map(recipeOutput, ci);
 		}
-	}
-	
-	@Override
-	public String getName()
-	{
-		return "IEKilnMapper";
-	}
-	
-	@Override
-	public String getDescription()
-	{
-		return "Add Conversions for kiln recipes";
-	}
-	
-	@Override
-	public boolean isAvailable()
-	{
-		return true;
 	}
 }

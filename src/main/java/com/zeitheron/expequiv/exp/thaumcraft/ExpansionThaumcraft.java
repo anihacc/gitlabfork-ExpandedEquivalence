@@ -5,19 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.proxy.IConversionProxy;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.config.Configuration;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.blocks.BlocksTC;
 import thaumcraft.api.items.ItemsTC;
@@ -37,8 +36,8 @@ public class ExpansionThaumcraft extends Expansion
 	protected void preInit(Configuration configs)
 	{
 		for(Aspect a : Aspect.aspects.values())
-			defAspectCosts.put(a, configs.getInt(a.getName(), "AspectEMC", 64, 0, Integer.MAX_VALUE, "Default cost of " + a.getName() + "."));
-		instabilityMod = configs.getInt("Instability", "Additional", 2048, 0, Integer.MAX_VALUE, "Additional EMC penalty per instability point.");
+			defAspectCosts.put(a, configs.getCategory("AspectEMC").getIntEntry(a.getName(), 64, 0, Integer.MAX_VALUE).setDescription("Default cost of " + a.getName() + ".").getValue());
+		instabilityMod = configs.getCategory("Additional").getIntEntry("Instability", 2048, 0, Integer.MAX_VALUE).setDescription("Additional EMC penalty per instability point.").getValue();
 	}
 	
 	@Override
@@ -91,8 +90,9 @@ public class ExpansionThaumcraft extends Expansion
 	@Override
 	public void registerEMC(IEMCProxy emc)
 	{
-//		for(Aspect asp : Aspect.aspects.values())
-//			emc.registerCustomEMC(ThaumcraftApiHelper.makeCrystal(asp), getVisCrystalCost() + getAspectCost(asp));
+		// for(Aspect asp : Aspect.aspects.values())
+		// emc.registerCustomEMC(ThaumcraftApiHelper.makeCrystal(asp),
+		// getVisCrystalCost() + getAspectCost(asp));
 		addEMC(ItemsTC.nuggets, 10, "RareEarths");
 		addEMC(ItemsTC.ingots, 2, "AlchemicalBrassIngot");
 		addEMC(ItemsTC.salisMundus, "SalisMundus");
@@ -107,8 +107,8 @@ public class ExpansionThaumcraft extends Expansion
 	}
 	
 	@Override
-	public void getMappers(List<IEMCMapper<NormalizedSimpleStack, Integer>> mappers)
+	public void getConverters(List<IEMCConverter> mappers)
 	{
-		mappers.add(new MagicalEMCMapper(this));
+		mappers.add(new MagicalEMCConverter(this));
 	}
 }
