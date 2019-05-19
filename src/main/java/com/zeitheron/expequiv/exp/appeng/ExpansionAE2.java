@@ -3,11 +3,13 @@ package com.zeitheron.expequiv.exp.appeng;
 import java.util.List;
 import java.util.function.Function;
 
+import com.zeitheron.expequiv.api.IEMC;
 import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
+import appeng.api.AEApi;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,17 +35,15 @@ public class ExpansionAE2 extends Expansion
 	@Override
 	public void registerEMC(IEMCProxy emc)
 	{
-		// HELP ME FIND AE2'S ITEM INSTANCES CLASS! PLZZ!!
-		Function<String, Item> find = reg -> ForgeRegistries.ITEMS.getValue(new ResourceLocation("appliedenergistics2", reg));
+		IEMC e = IEMC.PE_WRAPPER;
 		
-		Item material = find.apply("material");
-		emc.registerCustomEMC(new ItemStack(material, 1, 1), 64);
-		addEMC(material, 6, "MatterBall");
-		emc.registerCustomEMC(new ItemStack(material, 1, 10), 32);
-		emc.registerCustomEMC(new ItemStack(material, 1, 11), 128);
-		emc.registerCustomEMC(new ItemStack(material, 1, 12), 128);
-		addEMC(material, 47, "Singularity");
-		addEMC(find.apply("sky_stone_block"), "SkyStone");
+		e.register(AEApi.instance().definitions().materials().certusQuartzCrystalCharged().maybeStack(1).orElse(ItemStack.EMPTY), 64);
+		addEMC(AEApi.instance().definitions().materials().matterBall().maybeItem().orElse(null), 6, "MatterBall");
+		e.register(AEApi.instance().definitions().materials().purifiedCertusQuartzCrystal().maybeStack(1).orElse(ItemStack.EMPTY), 32);
+		e.register(AEApi.instance().definitions().materials().purifiedNetherQuartzCrystal().maybeStack(1).orElse(ItemStack.EMPTY), 128);
+		e.register(AEApi.instance().definitions().materials().purifiedFluixCrystal().maybeStack(1).orElse(ItemStack.EMPTY), 128);
+		addEMC(AEApi.instance().definitions().materials().singularity().maybeItem().orElse(null), 47, "Singularity");
+		addEMC(AEApi.instance().definitions().blocks().skyStoneBlock().maybeItem().orElse(null), "SkyStone");
 	}
 	
 	@Override
