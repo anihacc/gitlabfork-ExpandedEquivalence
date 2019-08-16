@@ -17,6 +17,7 @@ import com.zeitheron.hammercore.HammerCore;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.impl.EMCProxyImpl;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -61,20 +62,23 @@ public class ExpandedEquivalence
 		Set<ASMData> asmDatas = e.getAsmData().getAll(ExpansionReg.class.getCanonicalName());
 		asmDatas.forEach(asm ->
 		{
-			try
-			{
-				Class<?> cl = Class.forName(asm.getClassName());
-				ExpansionReg reg = cl.getAnnotation(ExpansionReg.class);
-				if(reg != null && Expansion.class.isAssignableFrom(cl))
+			if(Loader.isModLoaded(asm.getAnnotationInfo().get("modid").toString()))
+				try
 				{
-					Class<? extends Expansion> acl = cl.asSubclass(Expansion.class);
-					annotated.add(acl);
-					Expansion.registerExpansion(reg.modid(), acl);
+					Class<?> cl = Class.forName(asm.getClassName());
+					ExpansionReg reg = cl.getAnnotation(ExpansionReg.class);
+					if(reg != null && Expansion.class.isAssignableFrom(cl))
+					{
+						Class<? extends Expansion> acl = cl.asSubclass(Expansion.class);
+						annotated.add(acl);
+						Expansion.registerExpansion(reg.modid(), acl);
+					}
+				} catch(Throwable er)
+				{
+					if(er instanceof NoClassDefFoundError || er instanceof ClassNotFoundException)
+						return;
+					er.printStackTrace();
 				}
-			} catch(Throwable er)
-			{
-				er.printStackTrace();
-			}
 		});
 		
 		LOG.info("Registered " + annotated.size() + " new possible expansions based off @ExpansionReg:");
