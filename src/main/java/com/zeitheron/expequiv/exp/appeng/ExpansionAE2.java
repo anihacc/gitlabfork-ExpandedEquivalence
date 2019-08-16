@@ -1,7 +1,6 @@
 package com.zeitheron.expequiv.exp.appeng;
 
 import java.util.List;
-import java.util.function.Function;
 
 import com.zeitheron.expequiv.api.IEMC;
 import com.zeitheron.expequiv.api.IEMCConverter;
@@ -11,10 +10,7 @@ import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import appeng.api.AEApi;
 import moze_intel.projecte.api.proxy.IEMCProxy;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 @ExpansionReg(modid = "appliedenergistics2")
 public class ExpansionAE2 extends Expansion

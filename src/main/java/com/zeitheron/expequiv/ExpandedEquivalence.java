@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = InfoEE.MOD_ID, name = InfoEE.MOD_NAME, version = InfoEE.MOD_VERSION, certificateFingerprint = "4d7b29cd19124e986da685107d16ce4b49bc0a97", dependencies = "required-after:hammercore;required-after:projecte")
+@Mod(modid = InfoEE.MOD_ID, name = InfoEE.MOD_NAME, version = InfoEE.MOD_VERSION, certificateFingerprint = "4d7b29cd19124e986da685107d16ce4b49bc0a97", dependencies = "required-after:hammercore;required-after:projecte", updateJSON = "https://dccg.herokuapp.com/api/fmluc/295222")
 public class ExpandedEquivalence
 {
 	public List<Expansion> expansions;
@@ -42,9 +42,9 @@ public class ExpandedEquivalence
 	{
 		LOG.warn("*****************************");
 		LOG.warn("WARNING: Somebody has been tampering with ExpandedEquivalence jar!");
-		LOG.warn("It is highly recommended that you redownload mod from https://minecraft.curseforge.com/projects/295222 !");
+		LOG.warn("It is highly recommended that you redownload mod from https://www.curseforge.com/projects/295222 !");
 		LOG.warn("*****************************");
-		HammerCore.invalidCertificates.put(InfoEE.MOD_ID, "https://minecraft.curseforge.com/projects/295222");
+		HammerCore.invalidCertificates.put(InfoEE.MOD_ID, "https://www.curseforge.com/projects/295222");
 	}
 	
 	@EventHandler

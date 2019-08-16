@@ -7,9 +7,6 @@ import com.zeitheron.expequiv.exp.Expansion;
 import com.zeitheron.expequiv.exp.ExpansionReg;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
-
 @ExpansionReg(modid = "compactmachines3")
 public class ExpansionCompactMachines extends Expansion
 {

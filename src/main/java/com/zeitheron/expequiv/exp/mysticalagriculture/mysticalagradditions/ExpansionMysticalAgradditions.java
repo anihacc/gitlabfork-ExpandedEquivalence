@@ -18,7 +18,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistry;
 
 @ExpansionReg(modid = "mysticalagradditions")
 public class ExpansionMysticalAgradditions extends Expansion implements IEMCConverter

@@ -5,14 +5,9 @@ import com.zeitheron.expequiv.api.IEMC;
 import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fluids.FluidStack;
 import vazkii.botania.api.BotaniaAPI;
-import vazkii.botania.api.recipe.RecipeManaInfusion;
 import vazkii.botania.api.recipe.RecipePureDaisy;
 
 class PureDaisyEMCConverter implements IEMCConverter

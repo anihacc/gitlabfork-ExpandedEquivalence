@@ -4,7 +4,6 @@ import com.zeitheron.expequiv.api.CountedIngredient;
 import com.zeitheron.expequiv.api.FakeItem;
 import com.zeitheron.expequiv.api.IEMC;
 import com.zeitheron.expequiv.api.IEMCConverter;
-import com.zeitheron.expequiv.utils.CollectingHelper;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import net.minecraft.item.ItemStack;

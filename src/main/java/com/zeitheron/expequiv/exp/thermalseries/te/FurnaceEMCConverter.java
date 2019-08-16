@@ -6,7 +6,6 @@ import com.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import cofh.thermalexpansion.util.managers.machine.FurnaceManager;
-
 import cofh.thermalexpansion.util.managers.machine.FurnaceManager.FurnaceRecipe;
 import cofh.thermalfoundation.init.TFFluids;
 import net.minecraftforge.fluids.FluidStack;

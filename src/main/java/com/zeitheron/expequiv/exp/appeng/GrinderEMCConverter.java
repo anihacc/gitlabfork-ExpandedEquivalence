@@ -7,9 +7,6 @@ import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import appeng.api.AEApi;
 import appeng.api.features.IGrinderRecipe;
-import moze_intel.projecte.emc.IngredientMap;
-import moze_intel.projecte.emc.json.NSSItem;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import net.minecraft.item.ItemStack;
 
 class GrinderEMCConverter implements IEMCConverter

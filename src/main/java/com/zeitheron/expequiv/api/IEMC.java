@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import moze_intel.projecte.api.ProjectEAPI;
-import moze_intel.projecte.impl.EMCProxyImpl;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 

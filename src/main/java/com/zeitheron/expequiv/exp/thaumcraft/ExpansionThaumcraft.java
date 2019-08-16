@@ -71,12 +71,12 @@ public class ExpansionThaumcraft extends Expansion
 		conv.addConversion(1, BlocksTC.condenserlatticeDirty, ImmutableMap.of(BlocksTC.condenserlattice, 1));
 	}
 	
-	public int getVisCrystalCost()
+	public long getVisCrystalCost()
 	{
 		return getCfgEmc("VisCrystal").getValue();
 	}
 	
-	public int getPrimordialPearlCost()
+	public long getPrimordialPearlCost()
 	{
 		return getCfgEmc("PrimordialPearl").getValue();
 	}

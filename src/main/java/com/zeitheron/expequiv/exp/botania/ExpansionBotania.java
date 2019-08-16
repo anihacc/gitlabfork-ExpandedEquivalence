@@ -8,8 +8,6 @@ import com.zeitheron.expequiv.exp.ExpansionReg;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import moze_intel.projecte.api.proxy.IEMCProxy;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.Item;
 import vazkii.botania.common.block.ModBlocks;
 

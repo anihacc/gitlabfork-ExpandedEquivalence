@@ -12,14 +12,9 @@ import appeng.api.AEApi;
 import appeng.api.features.IInscriberRecipe;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import moze_intel.projecte.emc.IngredientMap;
-import moze_intel.projecte.emc.collector.IMappingCollector;
-import moze_intel.projecte.emc.json.NSSItem;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 class InscriberEMCConverter implements IEMCConverter

@@ -13,9 +13,6 @@ import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import hellfirepvp.astralsorcery.common.crafting.altar.AbstractAltarRecipe;
 import hellfirepvp.astralsorcery.common.crafting.altar.AltarRecipeRegistry;
-import moze_intel.projecte.emc.IngredientMap;
-import moze_intel.projecte.emc.json.NSSFake;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 

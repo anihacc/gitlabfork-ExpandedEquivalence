@@ -27,7 +27,7 @@ class ExtremeEMCConverter implements IEMCConverter
 			List<CountedIngredient> im = new ArrayList<>();
 			for(Ingredient i : recipe.getIngredients())
 				im.add(FakeItem.create(emc, 1, i));
-			emc.map(recipeOutput, recipeOutput.getCount(), im);
+			emc.map(recipeOutput.copy().splitStack(1), recipeOutput.getCount(), im);
 		}
 	}
 }

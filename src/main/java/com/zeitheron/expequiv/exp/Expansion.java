@@ -61,9 +61,9 @@ public abstract class Expansion
 			values.add(new ConfigEMCValue(base, id, name != null ? (name.equals("$") ? splitName(id) : name) : id));
 	}
 	
-	protected int getCfgEMC(int base, String id, String name)
+	protected long getCfgEMC(long base, String id, String name)
 	{
-		return config.getCategory("EMC").getIntEntry(id, base, 0, Integer.MAX_VALUE).setDescription("Base cost for " + name + ". Set to 0 to disable.").getValue();
+		return config.getCategory("EMC").getLongEntry(id, base, 0, Long.MAX_VALUE).setDescription("Base cost for " + name + ". Set to 0 to disable.").getValue();
 	}
 	
 	private static String splitName(String str)
@@ -178,12 +178,12 @@ public abstract class Expansion
 	
 	public static class ConfigEMCValue
 	{
-		final int base;
+		final long base;
 		final String id, name;
 		
-		private int value;
+		private long value;
 		
-		ConfigEMCValue(int base, String id, String name)
+		ConfigEMCValue(long base, String id, String name)
 		{
 			this.base = base;
 			this.id = id;
@@ -191,7 +191,7 @@ public abstract class Expansion
 			value = base;
 		}
 		
-		public int getValue()
+		public long getValue()
 		{
 			return value;
 		}

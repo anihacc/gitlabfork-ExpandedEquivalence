@@ -9,8 +9,6 @@ import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import blusunrize.immersiveengineering.common.IEContent;
 import moze_intel.projecte.api.proxy.IEMCProxy;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 import net.minecraft.item.Item;
 
 @ExpansionReg(modid = "immersiveengineering")

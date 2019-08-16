@@ -11,8 +11,6 @@ import forestry.apiculture.ModuleApiculture;
 import forestry.arboriculture.ModuleArboriculture;
 import forestry.core.ModuleCore;
 import moze_intel.projecte.api.proxy.IEMCProxy;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
-import moze_intel.projecte.emc.mappers.IEMCMapper;
 
 @ExpansionReg(modid = "forestry")
 public class ExpansionForestry extends Expansion
