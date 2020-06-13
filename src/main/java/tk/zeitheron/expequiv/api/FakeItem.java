@@ -46,7 +46,7 @@ public class FakeItem
 	
 	public static FakeItem create(IEMC emc, Ingredient ingredient)
 	{
-		return merge(emc, Arrays.asList(ingredient.getMatchingStacks()).stream().map(CountedIngredient::create).collect(Collectors.toList()));
+		return merge(emc, Arrays.stream(ingredient.getMatchingStacks()).map(CountedIngredient::create).collect(Collectors.toList()));
 	}
 	
 	public static CountedIngredient create(IEMC emc, int count, Ingredient ingredient)

@@ -4,6 +4,7 @@ import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.emc.mappers.APICustomEMCMapper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import tk.zeitheron.expequiv.ExpandedEquivalence;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public interface IEMC
 					ingredients.put(ci.getIngredient(), ingredients.get(ci.getIngredient()) + ci.getCount());
 				else
 					ingredients.put(ci.getIngredient(), ci.getCount());
+		if(ingredients.containsKey(null) || ingredients.containsValue(null)) ExpandedEquivalence.LOG.error("Found a NULL ingredient while adding " + out.toString());
 		if(out.getIngredient() != null && out.getCount() > 0 && !ingredients.isEmpty())
 			ProjectEAPI.getConversionProxy().addConversion(out.getCount(), out.getIngredient(), ingredients);
 	};

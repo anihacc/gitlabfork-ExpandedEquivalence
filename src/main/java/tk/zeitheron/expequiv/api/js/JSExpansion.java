@@ -6,6 +6,7 @@ import moze_intel.projecte.api.proxy.ITransmutationProxy;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +37,7 @@ public class JSExpansion extends Expansion
 		js = js
 				.inheritClassMethods(Internal.class, (name, method) -> !name.equals("setContext"))
 				.addClassPointer(JSIngredient.class, "Ingredient")
+				.addClassPointer(JSLists.class, "Lists")
 				.addClassPointer(JSStack.class, "ItemStack")
 				.processImports();
 		
@@ -92,7 +94,7 @@ public class JSExpansion extends Expansion
 	@Override
 	public Logger getLogger()
 	{
-		if(log == null) log = LogManager.getLogger(InfoEE.MOD_NAME + "/InternalJS");
+		if(log == null) log = LogManager.getLogger(InfoEE.MOD_NAME + "/" + modid + ".js");
 		return log;
 	}
 	
@@ -158,6 +160,16 @@ public class JSExpansion extends Expansion
 		public static CountedIngredient of(ItemStack stack, int count)
 		{
 			return CountedIngredient.create(stack.copy().splitStack(1), count);
+		}
+		
+		public static boolean isEmpty(Ingredient ingr)
+		{
+			return ingr == null || ingr.getMatchingStacks().length == 0;
+		}
+		
+		public static CountedIngredient decode(IEMC emc, Object obj)
+		{
+			return CountedIngredient.tryCreate(emc, obj);
 		}
 		
 		public static List<CountedIngredient> list()

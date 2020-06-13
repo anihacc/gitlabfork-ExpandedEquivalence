@@ -25,8 +25,12 @@ function CompressionEMCConverter(emc)
         var result = recipe.getResult();
         if(ItemStack.isEmpty(result)) return;
         var cost = recipe.getCost() / 2;
-        var im = Ingredient.list();
-        recipe.getIngredients().forEach(function(i) { im.add(FakeItem.create(emc, cost, i)); });
+        var im = Lists.arrayList();
+        recipe.getIngredients().forEach(function(i)
+        {
+            if(!Ingredient.isEmpty(i))
+                im.add(FakeItem.create(emc, 1, i));
+        });
         emc.map(Ingredient.of(result), im);
     });
 }
@@ -37,8 +41,12 @@ function ExtremeEMCConverter(emc)
     {
         var result = recipe.getRecipeOutput();
         if(ItemStack.isEmpty(result)) return;
-        var im = Ingredient.list();
-        recipe.getIngredients().forEach(function(i) { im.add(FakeItem.create(emc, 1, i)); });
+        var im = Lists.arrayList();
+        recipe.getIngredients().forEach(function(i)
+        {
+            if(!Ingredient.isEmpty(i))
+                im.add(FakeItem.create(emc, 1, i));
+        });
         emc.map(Ingredient.of(result), im);
     });
 }

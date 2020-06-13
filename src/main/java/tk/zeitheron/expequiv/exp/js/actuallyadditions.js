@@ -35,7 +35,7 @@ function LaserEMCConverter(emc)
         var result = recipe.getOutput();
         if(ItemStack.isEmpty(result)) return;
         var energy = Math.max(25, recipe.getEnergyUsed() / 125);
-        var im = Ingredient.list();
+        var im = Lists.arrayList();
         im.add(FakeItem.create(emc, recipe.getInput(), 1));
         im.add(emc.fake(energy).stack(1));
         emc.map(Ingredient.of(result), im);
@@ -48,7 +48,7 @@ function EmpowererEMCConverter(emc)
     {
         var result = recipe.getOutput();
         if(ItemStack.isEmpty(result)) return;
-        var im = Ingredient.list();
+        var im = Lists.arrayList();
         im.add(FakeItem.create(emc, recipe.getInput(), 1));
         if(recipe.getStandOne() != null) im.add(FakeItem.create(emc, recipe.getStandOne(), 1));
         if(recipe.getStandTwo() != null) im.add(FakeItem.create(emc, recipe.getStandTwo(), 1));

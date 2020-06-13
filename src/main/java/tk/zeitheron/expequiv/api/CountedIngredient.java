@@ -1,6 +1,7 @@
 package tk.zeitheron.expequiv.api;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -31,9 +32,7 @@ public class CountedIngredient
 	{
 		if(stack.isEmpty() || count < 1)
 			return null;
-		stack = stack.copy();
-		stack.setCount(1);
-		return new CountedIngredient(count, stack);
+		return new CountedIngredient(count, stack.copy().splitStack(1));
 	}
 	
 	public static CountedIngredient create(ItemStack stack)
@@ -80,7 +79,11 @@ public class CountedIngredient
 		if(x instanceof Item)
 			return create((Item) x, 1);
 		if(x instanceof Block)
-			return create((Block) x, 1);
+		{
+			Item blk = Item.getItemFromBlock((Block) x);
+			if(blk != Items.AIR) return create(blk, 1);
+			else return null;
+		}
 		if(x instanceof Ingredient)
 			return FakeItem.create(emc, (Ingredient) x, 1);
 		if(x instanceof String)
@@ -88,5 +91,14 @@ public class CountedIngredient
 		if(x instanceof FluidStack)
 			return create((FluidStack) x);
 		return null;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "CountedIngredient{" +
+				"count=" + count +
+				", ingredient=" + ingredient +
+				'}';
 	}
 }

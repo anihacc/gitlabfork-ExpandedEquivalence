@@ -16,6 +16,11 @@ struct Configs
     void addEMC(Item item, String configKey, String displayName, long EMC);
 
     void addEMC(Item item, int metadata, String configKey, String displayName, long EMC);
+
+
+    void addEMC(ItemStack stack, String configKey, long EMC);
+
+    void addEMC(ItemStack stack, String configKey, String displayName, long EMC);
 }
 
 struct EMCMapping

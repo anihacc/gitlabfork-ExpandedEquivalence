@@ -44,15 +44,15 @@ function InscriberEMCConverter(emc)
 import appeng.api.AEApi;
 
     var material = getItem(mod, "material");
-    var  presses = new IntArrayList();
+    var presses = Lists.intList();
     presses.add(13);
     presses.add(14);
     presses.add(15);
     presses.add(19);
     AEApi.instance().registries().inscriber().getRecipes().forEach(function(recipe)
     {
-        var im = Ingredient.list();
-        var inputs = ItemStack.list();
+        var im = Lists.arrayList();
+        var inputs = Lists.arrayList();
         inputs.add(recipe.getInputs().get(0));
         inputs.add(recipe.getTopOptional().orElse(ItemStack.EMPTY));
         inputs.add(recipe.getBottomOptional().orElse(ItemStack.EMPTY));
