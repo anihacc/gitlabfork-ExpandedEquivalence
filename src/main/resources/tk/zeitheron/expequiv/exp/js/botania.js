@@ -63,7 +63,7 @@ function ElvenTradeEMCConverter(emc)
             var dec = Ingredient.decode(emc, o);
             if(dec) im.add(dec);
         });
-        var output = recipe.getOutputs().stream().filter(function(s) { return !s.isEmpty(); }).findFirst().orElse(ItemStack.EMPTY);
+        var output = recipe.getOutputs().stream().filter(function(s) { return !ItemStack.isEmpty(s); }).findFirst().orElse(ItemStack.EMPTY);
         if(!ItemStack.isEmpty(output)) emc.map(Ingredient.of(output), im);
     });
 }

@@ -29,7 +29,7 @@ function CompressionEMCConverter(emc)
         recipe.getIngredients().forEach(function(i)
         {
             if(!Ingredient.isEmpty(i))
-                im.add(FakeItem.create(emc, 1, i));
+                im.add(FakeItem.create(emc, cost, i));
         });
         emc.map(Ingredient.of(result), im);
     });

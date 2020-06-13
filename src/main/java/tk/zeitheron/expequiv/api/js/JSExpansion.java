@@ -41,7 +41,7 @@ public class JSExpansion extends Expansion
 				.addClassPointer(JSStack.class, "ItemStack")
 				.processImports();
 		
-		this.engine = new ScriptEngineManager().getEngineByName("nashorn");
+		this.engine = new ScriptEngineManager(null).getEngineByName("nashorn");
 		this.engine.eval(js.read());
 		this.invocable = (Invocable) engine;
 	}

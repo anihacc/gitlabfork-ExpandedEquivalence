@@ -34,11 +34,15 @@ function AltarEMCConverter(emc)
         var result = recipe.getOutputForMatching();
         if(ItemStack.isEmpty(result)) return;
         var im = Lists.arrayList();
-        recipe.getNativeRecipe().getIngredients().forEach(function(i)
+
+        var nt = recipe.getNativeRecipe();
+
+        (nt.func_192400_c ? nt.func_192400_c() : nt.getIngredients()).forEach(function(i)
         {
             if(!Ingredient.isEmpty(i))
                 im.add(FakeItem.create(emc, 1, i));
         });
+
         var xp = emc.fake(100 * recipe.getCraftExperience() * recipe.getCraftExperienceMultiplier());
         im.add(xp.stack(1));
         emc.map(Ingredient.of(result), im);
