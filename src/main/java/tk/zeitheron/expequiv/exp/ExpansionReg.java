@@ -1,4 +1,4 @@
-package com.zeitheron.expequiv.exp;
+package tk.zeitheron.expequiv.exp;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

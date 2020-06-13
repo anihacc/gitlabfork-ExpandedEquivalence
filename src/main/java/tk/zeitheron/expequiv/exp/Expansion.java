@@ -1,17 +1,11 @@
-package com.zeitheron.expequiv.exp;
+package tk.zeitheron.expequiv.exp;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.zeitheron.expequiv.ExpandedEquivalence;
-import com.zeitheron.expequiv.api.IEMCConverter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import tk.zeitheron.expequiv.ExpandedEquivalence;
+import tk.zeitheron.expequiv.InfoEE;
+import tk.zeitheron.expequiv.api.IEMCConverter;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
-
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
 import moze_intel.projecte.impl.EMCProxyImpl;
@@ -19,10 +13,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public abstract class Expansion
 {
-	public static final Map<String, List<Class<? extends Expansion>>> EXPANSIONS = new HashMap<>();
-	
+	public static final Map<String, List<IExpansionFactory>> EXPANSIONS = new HashMap<>();
 	public final String modid;
 	public final Object[] args;
 	private final Configuration config;
@@ -38,7 +40,7 @@ public abstract class Expansion
 	private List<ConfigEMCValue> values;
 	
 	/**
-	 * Call {@link #addEMCCfg(int, String, String)} at this method to define new
+	 * Call {@link #addEMCCfg(long, String, String)} at this method to define new
 	 * config entries for different items
 	 */
 	protected void addCfgEMC()
@@ -50,15 +52,20 @@ public abstract class Expansion
 		return cfgEmc.get(id);
 	}
 	
-	protected void addEMCCfg(int base, String id)
+	protected void addEMCCfg(long base, String id)
 	{
 		addEMCCfg(base, id, "$");
 	}
 	
-	protected void addEMCCfg(int base, String id, String name)
+	protected void addEMCCfg(long base, String id, String name)
 	{
 		if(values != null)
 			values.add(new ConfigEMCValue(base, id, name != null ? (name.equals("$") ? splitName(id) : name) : id));
+	}
+	
+	protected long getCfgEMC(long base, String id)
+	{
+		return getCfgEMC(base, id, splitName(id));
 	}
 	
 	protected long getCfgEMC(long base, String id, String name)
@@ -83,13 +90,41 @@ public abstract class Expansion
 		return config;
 	}
 	
+	public static void registerExpansion(String modid, IExpansionFactory f)
+	{
+		EXPANSIONS.computeIfAbsent(modid, k -> new ArrayList<>())
+				.add(f);
+	}
+	
+	/**
+	 * @deprecated backwards compat
+	 */
+	@Deprecated
 	public static void registerExpansion(String modid, Class<? extends Expansion> cl)
 	{
-		List<Class<? extends Expansion>> exps = EXPANSIONS.get(modid);
-		if(exps == null || !(exps instanceof ArrayList))
-			EXPANSIONS.put(modid, exps = new ArrayList<>());
-		if(!exps.contains(cl))
-			exps.add(cl);
+		registerExpansion(modid, new IExpansionFactory()
+		{
+			@Override
+			public String getName()
+			{
+				return cl.getSimpleName();
+			}
+			
+			@Override
+			public Expansion create(String modid, Configuration config, Object[] args)
+			{
+				try
+				{
+					Constructor<? extends Expansion> exp = cl.getConstructor(String.class, Configuration.class, Object[].class);
+					exp.setAccessible(true);
+					return exp.newInstance(modid, config, args);
+				} catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e)
+				{
+					e.printStackTrace();
+				}
+				return null;
+			}
+		});
 	}
 	
 	public static List<Expansion> createExpansionList(File dir, Object... args)
@@ -98,24 +133,30 @@ public abstract class Expansion
 		List<String> loadedMods = EXPANSIONS.keySet().stream().filter(Loader::isModLoaded).collect(Collectors.toList());
 		for(String modid : loadedMods)
 		{
-			List<Class<? extends Expansion>> classes = EXPANSIONS.get(modid);
-			for(Class<? extends Expansion> c : classes)
+			List<IExpansionFactory> classes = EXPANSIONS.get(modid);
+			for(IExpansionFactory c : classes)
 				try
 				{
 					ExpandedEquivalence.LOG.info("Creating expansion " + c.getName() + " for mod " + modid + " (" + Loader.instance().getIndexedModList().get(modid).getName() + ")");
 					
-					Constructor<? extends Expansion> exp = c.getConstructor(String.class, Configuration.class, Object[].class);
-					exp.setAccessible(true);
-					
 					File subMod = new File(dir, modid);
 					if(!subMod.isDirectory())
 						subMod.mkdir();
-					File cfgFile = new File(subMod, c.getSimpleName() + ".cfg");
+					File cfgFile = new File(subMod, c.getName() + ".cfg");
 					Configuration cfg = new Configuration(cfgFile);
-					Expansion ex = exp.newInstance(modid, cfg, args);
-					boolean b = ex.getConfig().getCategory("Base").getBooleanEntry("Enabled", true).setDescription("Enable this part of ExpandedEquivalence").getValue();
+					Expansion ex = c.create(modid, cfg, args);
+					
+					if(ex == null)
+					{
+						ExpandedEquivalence.LOG.warn("Failed to load expansion from factory " + c.getName() + ", skipping.");
+						continue;
+					}
+					
+					boolean b = cfg.getCategory("Base").getBooleanEntry("Enabled", true).setDescription("Enable this part of ExpandedEquivalence").getValue();
+					
 					if(cfg.hasChanged())
 						cfg.save();
+					
 					if(b)
 						exps.add(ex);
 				} catch(Throwable err)
@@ -176,11 +217,28 @@ public abstract class Expansion
 		
 	}
 	
+	protected Logger log;
+	
+	public Logger getLogger()
+	{
+		if(log == null) log = LogManager.getLogger(InfoEE.MOD_NAME + "/" + getClass().getSimpleName());
+		return log;
+	}
+	
+	public interface IExpansionFactory
+	{
+		default String getName()
+		{
+			return "Unnamed factory";
+		}
+		
+		Expansion create(String modid, Configuration config, Object[] args);
+	}
+	
 	public static class ConfigEMCValue
 	{
 		final long base;
 		final String id, name;
-		
 		private long value;
 		
 		ConfigEMCValue(long base, String id, String name)

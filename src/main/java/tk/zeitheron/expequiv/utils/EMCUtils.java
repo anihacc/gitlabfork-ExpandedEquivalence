@@ -1,4 +1,4 @@
-package com.zeitheron.expequiv.utils;
+package tk.zeitheron.expequiv.utils;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 [
 	{
-	  "modid": "",
-	  "name": "",
-	  "description": "",
+	  "modid": "expequiv",
+	  "name": "Expanded Equivalence",
+	  "description": "Provides support for EMC from ProjectE to a few mods out there",
 	  "version": "${version}",
 	  "mcversion": "${mcversion}",
 	  "authorList": ["Zeitheron"]

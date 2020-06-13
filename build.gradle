@@ -53,8 +53,8 @@ minecraft {
 
 repositories {
     maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
+        name = "DragonForge"
+        url = "https://raw.github.com/dragon-forge/maven/master"
     }
     maven {
         name = "CoFH Maven"
@@ -67,7 +67,8 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "hammer-lib:HammerCore-${config.minecraft_version}:${config.hc_version}:deobf"
+	deobfCompile "tk.zeitheron.HammerLib:HammerLib-${config.minecraft_version}:${config.hl_version}:deobf"
+	deobfCompile "tk.zeitheron.ScreenshotWatermark:ScreenshotWatermark-1.12.2:12.1.1:deobf"
     deobfCompile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
 	
     deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}:api"

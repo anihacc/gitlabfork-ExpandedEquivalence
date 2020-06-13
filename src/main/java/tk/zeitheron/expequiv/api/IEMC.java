@@ -1,16 +1,17 @@
-package com.zeitheron.expequiv.api;
+package tk.zeitheron.expequiv.api;
+
+import moze_intel.projecte.api.ProjectEAPI;
+import moze_intel.projecte.emc.mappers.APICustomEMCMapper;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import moze_intel.projecte.api.ProjectEAPI;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
 public interface IEMC
 {
-	public static IEMC PE_WRAPPER = (out, ings) ->
+	IEMC PE_WRAPPER = (out, ings) ->
 	{
 		if(out == null)
 			return;
@@ -31,7 +32,12 @@ public interface IEMC
 	
 	default void map(ItemStack output, int outCount, Collection<CountedIngredient> ingredients)
 	{
-		map(output, outCount, ingredients.toArray(new CountedIngredient[ingredients.size()]));
+		map(output, outCount, ingredients.toArray(new CountedIngredient[0]));
+	}
+	
+	default void map(CountedIngredient ingr, Collection<CountedIngredient> ingredients)
+	{
+		map(ingr, ingredients.toArray(new CountedIngredient[0]));
 	}
 	
 	default void map(ItemStack output, int outCount, CountedIngredient... ingredients)
@@ -87,7 +93,7 @@ public interface IEMC
 	
 	default void register(FakeItem item, long emc)
 	{
-		ProjectEAPI.getEMCProxy().registerCustomEMC(item.getHolder(), emc);
+		APICustomEMCMapper.instance.registerCustomEMC(item.getHolder(), emc);
 	}
 	
 	default void register(ItemStack item, long emc)

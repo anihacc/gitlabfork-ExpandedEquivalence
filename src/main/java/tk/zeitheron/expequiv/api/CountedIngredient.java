@@ -1,4 +1,4 @@
-package com.zeitheron.expequiv.api;
+package tk.zeitheron.expequiv.api;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

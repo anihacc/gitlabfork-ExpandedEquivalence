@@ -21,7 +21,7 @@ class PureDaisyEMCConverter implements IEMCConverter
 			IBlockState state = recipe.getOutputState();
 			ItemStack output = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 			CountedIngredient in = CountedIngredient.tryCreate(emc, oi);
-			if(in != null)
+			if(in != null && !output.isEmpty())
 				emc.map(output, in);
 		}
 	}

@@ -1,4 +1,4 @@
-package com.zeitheron.expequiv.api;
+package tk.zeitheron.expequiv.api;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,6 +17,11 @@ public class FakeItem
 	public Object getHolder()
 	{
 		return holder;
+	}
+	
+	public CountedIngredient stack(int amount)
+	{
+		return CountedIngredient.create(this, amount);
 	}
 	
 	public static FakeItem merge(IEMC emc, CountedIngredient... ingredients)

@@ -1,19 +1,7 @@
-package com.zeitheron.expequiv;
+package tk.zeitheron.expequiv;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.zeitheron.expequiv.api.IEMC;
-import com.zeitheron.expequiv.api.IEMCConverter;
-import com.zeitheron.expequiv.exp.Expansion;
-import com.zeitheron.expequiv.exp.ExpansionReg;
 import com.zeitheron.hammercore.HammerCore;
-
+import com.zeitheron.hammercore.cfg.file1132.Configuration;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.impl.EMCProxyImpl;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,21 +9,31 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import tk.zeitheron.expequiv.api.IEMC;
+import tk.zeitheron.expequiv.api.IEMCConverter;
+import tk.zeitheron.expequiv.api.js.JSExpansion;
+import tk.zeitheron.expequiv.api.js.JSSource;
+import tk.zeitheron.expequiv.exp.Expansion;
+import tk.zeitheron.expequiv.exp.ExpansionReg;
 
-@Mod(modid = InfoEE.MOD_ID, name = InfoEE.MOD_NAME, version = InfoEE.MOD_VERSION, certificateFingerprint = "4d7b29cd19124e986da685107d16ce4b49bc0a97", dependencies = "required-after:hammercore;required-after:projecte", updateJSON = "https://dccg.herokuapp.com/api/fmluc/295222")
+import javax.script.ScriptException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Mod(modid = InfoEE.MOD_ID, name = InfoEE.MOD_NAME, version = InfoEE.MOD_VERSION, certificateFingerprint = "9f5e2a811a8332a842b34f6967b7db0ac4f24856", dependencies = "required-after:hammercore;required-after:projecte", updateJSON = "https://dccg.herokuapp.com/api/fmluc/295222")
 public class ExpandedEquivalence
 {
 	public List<Expansion> expansions;
-	
 	@Instance
 	public static ExpandedEquivalence instance;
-	
 	public static final Logger LOG = LogManager.getLogger(InfoEE.MOD_ID);
 	
 	@EventHandler
@@ -53,6 +51,44 @@ public class ExpandedEquivalence
 	{
 		// Register expansions either under FMLConstructionEvent or annotate
 		// with @ExpansionReg
+		
+		ProgressManager.ProgressBar bar = ProgressManager.push("Loading JS", Loader.instance().getIndexedModList().size());
+		for(String mod : Loader.instance().getIndexedModList().keySet().stream().sorted().collect(Collectors.toList()))
+		{
+			String name;
+			bar.step(name = Loader.instance().getIndexedModList().get(mod).getName());
+			JSSource src = JSSource.fromLocalResource("tk/zeitheron/expequiv/exp/js/" + mod + ".js");
+			if(src.exists())
+			{
+				Expansion.IExpansionFactory factory = new Expansion.IExpansionFactory()
+				{
+					@Override
+					public String getName()
+					{
+						return "internal";
+					}
+					
+					@Override
+					public Expansion create(String modid, Configuration config, Object[] args)
+					{
+						try
+						{
+							JSExpansion jse = new JSExpansion(modid, config, args, src);
+							jse.contruct();
+							return jse;
+						} catch(ScriptException scriptException)
+						{
+							scriptException.printStackTrace();
+						}
+						return null;
+					}
+				};
+				
+				Expansion.registerExpansion(mod, factory);
+				LOG.info("Created JavaScript expansion for mod " + name);
+			}
+		}
+		ProgressManager.pop(bar);
 	}
 	
 	@EventHandler
@@ -118,7 +154,11 @@ public class ExpandedEquivalence
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		expansions.forEach(ex -> ex.postInit(EMCProxyImpl.instance, ProjectEAPI.getTransmutationProxy()));
-		
+	}
+	
+	@EventHandler
+	public void loadComplete(FMLLoadCompleteEvent e)
+	{
 		instance.expansions.forEach(ex ->
 		{
 			List<IEMCConverter> mappers = new ArrayList<>();
@@ -128,10 +168,10 @@ public class ExpandedEquivalence
 				try
 				{
 					m.register(IEMC.PE_WRAPPER, ex.getConfig());
-					LOG.info("Collected EMC convertions from " + m.getClass().getName());
+					LOG.info("Collected EMC convertions from " + m.getName());
 				} catch(Throwable err)
 				{
-					LOG.fatal("Exception while gathering EMC convertions from converter " + m.getClass().getName() + ". PLEASE REPORT THIS! EMC VALUES MIGHT BE INCONSISTENT!", err);
+					LOG.fatal("Exception while gathering EMC convertions from converter " + m.getName() + ". PLEASE REPORT THIS! EMC VALUES MIGHT BE INCONSISTENT!", err);
 				}
 			}
 		});

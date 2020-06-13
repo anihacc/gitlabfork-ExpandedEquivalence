@@ -1,4 +1,4 @@
-package com.zeitheron.expequiv;
+package tk.zeitheron.expequiv;
 
 public class InfoEE
 {

@@ -11,8 +11,6 @@ import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
 import de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI;
 import de.ellpeck.actuallyadditions.api.recipe.EmpowererRecipe;
-import moze_intel.projecte.emc.json.NSSItem;
-import moze_intel.projecte.emc.json.NormalizedSimpleStack;
 import net.minecraft.item.ItemStack;
 
 class EmpowererEMCConverter implements IEMCConverter
@@ -25,7 +23,6 @@ class EmpowererEMCConverter implements IEMCConverter
 			ItemStack recipeOutput = recipe.getOutput();
 			if(recipeOutput.isEmpty())
 				continue;
-			NormalizedSimpleStack recipeOutputNorm = NSSItem.create(recipeOutput);
 			List<CountedIngredient> im = new ArrayList<>();
 			
 			im.add(FakeItem.create(emc, recipe.getInput(), 1));
