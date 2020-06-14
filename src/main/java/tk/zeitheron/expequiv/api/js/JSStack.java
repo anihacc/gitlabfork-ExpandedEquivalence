@@ -3,6 +3,7 @@ package tk.zeitheron.expequiv.api.js;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -14,7 +15,7 @@ public class JSStack
 	
 	public static boolean isEmpty(ItemStack stack)
 	{
-		return stack.isEmpty();
+		return stack == null || stack.isEmpty();
 	}
 	
 	public static int getMetadata(ItemStack stack)
@@ -53,7 +54,7 @@ public class JSStack
 		Item item = blk.getItemDropped(state, Blk.BLKRAND, 0);
 		int q = blk.quantityDropped(state, 0, Blk.BLKRAND);
 		int d = blk.damageDropped(state);
-		if(item != null && q > 0) return new ItemStack(item, q, d);
+		if(item != Items.AIR && item != null && q > 0) return new ItemStack(item, q, d);
 		return EMPTY;
 	}
 	

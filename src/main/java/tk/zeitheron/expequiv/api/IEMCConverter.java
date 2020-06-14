@@ -10,4 +10,6 @@ public interface IEMCConverter
 	{
 		return getClass().getName();
 	}
+	
+	default boolean doLogRegistration() { return true; }
 }

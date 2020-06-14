@@ -142,7 +142,7 @@ public abstract class Expansion
 					File subMod = new File(dir, modid);
 					if(!subMod.isDirectory())
 						subMod.mkdir();
-					File cfgFile = new File(subMod, c.getName() + ".cfg");
+					File cfgFile = new File(subMod, c.getConfigName() + ".cfg");
 					Configuration cfg = new Configuration(cfgFile);
 					Expansion ex = c.create(modid, cfg, args);
 					
@@ -227,6 +227,11 @@ public abstract class Expansion
 	
 	public interface IExpansionFactory
 	{
+		default String getConfigName()
+		{
+			return "Unnamed";
+		}
+		
 		default String getName()
 		{
 			return "Unnamed factory";

@@ -16,6 +16,16 @@ public class JSConfigs
 		this.config = config;
 	}
 	
+	public void registerEMC(Item item, int metadata, long emc)
+	{
+		EMCProxyImpl.instance.registerCustomEMC(new ItemStack(item, 1, metadata), emc);
+	}
+	
+	public void registerEMC(Item item, long emc)
+	{
+		EMCProxyImpl.instance.registerCustomEMC(new ItemStack(item), emc);
+	}
+	
 	public void addEMC(Item item, String configKey, long emc)
 	{
 		addEMC(item, 0, configKey, emc);

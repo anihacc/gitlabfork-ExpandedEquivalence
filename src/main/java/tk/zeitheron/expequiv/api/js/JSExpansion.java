@@ -5,17 +5,12 @@ import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tk.zeitheron.expequiv.ExpandedEquivalence;
 import tk.zeitheron.expequiv.InfoEE;
-import tk.zeitheron.expequiv.api.CountedIngredient;
-import tk.zeitheron.expequiv.api.FakeItem;
 import tk.zeitheron.expequiv.api.IEMC;
 import tk.zeitheron.expequiv.api.IEMCConverter;
 import tk.zeitheron.expequiv.exp.Expansion;
@@ -24,7 +19,6 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JSExpansion extends Expansion
@@ -41,6 +35,9 @@ public class JSExpansion extends Expansion
 				.addClassPointer(JSIngredient.class, "Ingredient")
 				.addClassPointer(JSLists.class, "Lists")
 				.addClassPointer(JSStack.class, "ItemStack")
+				.addClassPointer(JSReflection.class, "Reflection")
+				.addClassPointer(JSVanilla.class, "Vanilla")
+				.addClassPointer(JSData.class, "Data")
 				.processImports();
 		
 		this.engine = new ScriptEngineManager(null).getEngineByName("nashorn");
@@ -48,8 +45,10 @@ public class JSExpansion extends Expansion
 		this.invocable = (Invocable) engine;
 	}
 	
-	public void contruct()
+	public void contruct(int phase)
 	{
+		if(phase == 0) invoke("setupData");
+		else if(phase == 1) invoke("tweakData");
 	}
 	
 	@Override
@@ -69,28 +68,29 @@ public class JSExpansion extends Expansion
 	{
 		JSConfigs jsc = new JSConfigs(this, getConfig());
 		Internal.setContext(new ExpansionContext(this));
-		invoke("registerEMC", jsc);
+		invoke("registerEMC", jsc, getConfig());
 		if(getConfig().hasChanged()) getConfig().save();
 	}
 	
 	@Override
 	public void getConverters(List<IEMCConverter> mappers)
 	{
+		Internal.setContext(new ExpansionContext(this));
 		invoke("addMappers", new MapperAcceptor(mappers, this));
 	}
 	
-	public Object invoke(String fun, Object... args)
+	public JSCallbackInfo invoke(String fun, Object... args)
 	{
 		try
 		{
-			return invocable.invokeFunction(fun, args);
-		} catch(ScriptException e)
+			return new JSCallbackInfo(invocable.invokeFunction(fun, args));
+		} catch(NoSuchMethodException e)
 		{
-			e.printStackTrace();
-		} catch(NoSuchMethodException ignored)
+			return new JSCallbackInfo(false, false, e);
+		} catch(Throwable e)
 		{
+			return new JSCallbackInfo(true, false, e);
 		}
-		return null;
 	}
 	
 	@Override
@@ -113,20 +113,44 @@ public class JSExpansion extends Expansion
 		
 		public void addMapper(String fun)
 		{
-			converters.add(new IEMCConverter()
+			converters.add(new JSEMCConverter(fun));
+		}
+		
+		public class JSEMCConverter implements IEMCConverter
+		{
+			final String func;
+			
+			public JSEMCConverter(String func)
 			{
-				@Override
-				public String getName()
-				{
-					return expansion.modid + ".js/" + fun;
-				}
+				this.func = func;
+			}
+			
+			@Override
+			public String getName()
+			{
+				return expansion.modid + ".js/" + func;
+			}
+			
+			@Override
+			public void register(IEMC emc, Configuration cfg)
+			{
+				JSIngredient.defaultEMC = new JSEMCMapping(emc);
+				Internal.setContext(new ExpansionContext(expansion));
 				
-				@Override
-				public void register(IEMC emc, Configuration cfg)
-				{
-					expansion.invoke(fun, new JSEMCMapping(emc));
-				}
-			});
+				JSCallbackInfo cb = expansion.invoke(func, JSIngredient.defaultEMC);
+				
+				if(!cb.functionExists) Internal.error("Unable to find EMC Mapper " + getName());
+				else if(!cb.callSuccessful) Internal.error("Failed to call EMC Mapper " + getName());
+				else Internal.info("Processed EMC Mapper " + getName());
+				
+				if(cb.error != null) cb.error.printStackTrace();
+			}
+			
+			@Override
+			public boolean doLogRegistration()
+			{
+				return false;
+			}
 		}
 	}
 	
@@ -142,54 +166,6 @@ public class JSExpansion extends Expansion
 		}
 	}
 	
-	public static class JSIngredient
-	{
-		public static CountedIngredient of(Item item, int amount)
-		{
-			return CountedIngredient.create(item, amount);
-		}
-		
-		public static CountedIngredient of(Item item, int metadata, int amount)
-		{
-			return CountedIngredient.create(new ItemStack(item, 1, metadata), amount);
-		}
-		
-		public static CountedIngredient of(ItemStack stack)
-		{
-			return CountedIngredient.create(stack.copy().splitStack(1), stack.getCount());
-		}
-		
-		public static CountedIngredient of(IEMC emc, ItemStack... stacks)
-		{
-			return FakeItem.create(emc, 1, Ingredient.fromStacks(stacks));
-		}
-		
-		public static CountedIngredient of(FluidStack stack)
-		{
-			return CountedIngredient.create(stack, 1);
-		}
-		
-		public static CountedIngredient of(ItemStack stack, int count)
-		{
-			return CountedIngredient.create(stack.copy().splitStack(1), count);
-		}
-		
-		public static boolean isEmpty(Ingredient ingr)
-		{
-			return ingr == null || ingr.getMatchingStacks().length == 0;
-		}
-		
-		public static CountedIngredient decode(IEMC emc, Object obj)
-		{
-			return CountedIngredient.tryCreate(emc, obj);
-		}
-		
-		public static List<CountedIngredient> list()
-		{
-			return new ArrayList<>();
-		}
-	}
-	
 	public static class Internal
 	{
 		public static ExpansionContext context = null;
@@ -198,7 +174,7 @@ public class JSExpansion extends Expansion
 		public static void setContext(ExpansionContext ctx)
 		{
 			context = ctx;
-			logger = ctx.logger;
+			logger = ctx == null ? ExpandedEquivalence.LOG : ctx.logger;
 		}
 		
 		public static void warn(String msg)
@@ -216,6 +192,16 @@ public class JSExpansion extends Expansion
 			Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(namespace, key));
 			if(i == null || i == Items.AIR) error("Unable to find item " + namespace + ":" + key);
 			return i;
+		}
+		
+		public static void info(String msg)
+		{
+			logger.info(msg);
+		}
+		
+		public static Logger getLog()
+		{
+			return logger;
 		}
 	}
 }

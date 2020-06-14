@@ -28,6 +28,11 @@ public class CountedIngredient
 		return ingredient;
 	}
 	
+	public CountedIngredient stack(int amount)
+	{
+		return new CountedIngredient(this.count * amount, ingredient);
+	}
+	
 	public static CountedIngredient create(ItemStack stack, int count)
 	{
 		if(stack.isEmpty() || count < 1)

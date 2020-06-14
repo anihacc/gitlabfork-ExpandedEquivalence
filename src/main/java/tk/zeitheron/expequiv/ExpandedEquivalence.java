@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 
 @Mod(modid = InfoEE.MOD_ID, name = InfoEE.MOD_NAME, version = InfoEE.MOD_VERSION, certificateFingerprint = "9f5e2a811a8332a842b34f6967b7db0ac4f24856", dependencies = "required-after:hammercore;required-after:projecte", updateJSON = "https://dccg.herokuapp.com/api/fmluc/295222")
@@ -46,6 +47,8 @@ public class ExpandedEquivalence
 		HammerCore.invalidCertificates.put(InfoEE.MOD_ID, "https://www.curseforge.com/projects/295222");
 	}
 	
+	List<IntConsumer> constructCalls = new ArrayList<>();
+	
 	@EventHandler
 	public void construct(FMLConstructionEvent e)
 	{
@@ -63,9 +66,15 @@ public class ExpandedEquivalence
 				Expansion.IExpansionFactory factory = new Expansion.IExpansionFactory()
 				{
 					@Override
-					public String getName()
+					public String getConfigName()
 					{
 						return "internal";
+					}
+					
+					@Override
+					public String getName()
+					{
+						return mod + ".js";
 					}
 					
 					@Override
@@ -74,7 +83,7 @@ public class ExpandedEquivalence
 						try
 						{
 							JSExpansion jse = new JSExpansion(modid, config, args, src);
-							jse.contruct();
+							constructCalls.add(jse::contruct);
 							return jse;
 						} catch(ScriptException scriptException)
 						{
@@ -131,6 +140,12 @@ public class ExpandedEquivalence
 		
 		expansions = Expansion.createExpansionList(cfgsDir, InfoEE.MOD_ID, InfoEE.MOD_NAME, InfoEE.MOD_VERSION);
 		
+		// setup JS vars
+		constructCalls.forEach(c -> c.accept(0));
+		
+		// tweak JS vars
+		constructCalls.forEach(c -> c.accept(1));
+		
 		LOG.info("Created " + expansions.size() + " expansions.");
 		
 		expansions.forEach(ex ->
@@ -146,7 +161,7 @@ public class ExpandedEquivalence
 	@EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		expansions.forEach(ex -> ex.init());
+		expansions.forEach(Expansion::init);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
@@ -168,12 +183,13 @@ public class ExpandedEquivalence
 				try
 				{
 					m.register(IEMC.PE_WRAPPER, ex.getConfig());
-					LOG.info("Collected EMC convertions from " + m.getName());
+					if(m.doLogRegistration()) LOG.info("Collected EMC convertions from " + m.getName());
 				} catch(Throwable err)
 				{
 					LOG.fatal("Exception while gathering EMC convertions from converter " + m.getName() + ". PLEASE REPORT THIS! EMC VALUES MIGHT BE INCONSISTENT!", err);
 				}
 			}
+			JSExpansion.Internal.setContext(null);
 		});
 	}
 }

@@ -3,10 +3,9 @@ package tk.zeitheron.expequiv.api.js;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class JSLists
 {
@@ -23,5 +22,15 @@ public class JSLists
 	public static <T> Set<T> hashSet()
 	{
 		return new HashSet<>();
+	}
+	
+	public static <T> Stream<T> stream(T[] array) { return Arrays.stream(array); }
+	
+	public static <T> Stream<T> stream(Collection<T> array) { return array.stream(); }
+	
+	public static <T> Stream<T> stream(Iterable<T> array)
+	{
+		if(array instanceof Collection) return stream((Collection<T>) array);
+		else return StreamSupport.stream(array.spliterator(), false);
 	}
 }
