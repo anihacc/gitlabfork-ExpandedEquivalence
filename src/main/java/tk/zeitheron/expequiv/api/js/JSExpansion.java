@@ -8,12 +8,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tk.zeitheron.expequiv.ExpandedEquivalence;
 import tk.zeitheron.expequiv.InfoEE;
 import tk.zeitheron.expequiv.api.CountedIngredient;
+import tk.zeitheron.expequiv.api.FakeItem;
 import tk.zeitheron.expequiv.api.IEMC;
 import tk.zeitheron.expequiv.api.IEMCConverter;
 import tk.zeitheron.expequiv.exp.Expansion;
@@ -155,6 +157,16 @@ public class JSExpansion extends Expansion
 		public static CountedIngredient of(ItemStack stack)
 		{
 			return CountedIngredient.create(stack.copy().splitStack(1), stack.getCount());
+		}
+		
+		public static CountedIngredient of(IEMC emc, ItemStack... stacks)
+		{
+			return FakeItem.create(emc, 1, Ingredient.fromStacks(stacks));
+		}
+		
+		public static CountedIngredient of(FluidStack stack)
+		{
+			return CountedIngredient.create(stack, 1);
 		}
 		
 		public static CountedIngredient of(ItemStack stack, int count)
