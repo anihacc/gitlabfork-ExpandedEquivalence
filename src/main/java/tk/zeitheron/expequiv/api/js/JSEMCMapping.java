@@ -25,4 +25,9 @@ public class JSEMCMapping implements IEMC
 		this.emc.register(fake, emc);
 		return fake;
 	}
+	
+	public FakeItem fake()
+	{
+		return new FakeItem();
+	}
 }

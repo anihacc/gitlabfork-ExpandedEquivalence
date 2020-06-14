@@ -8,6 +8,7 @@ import tk.zeitheron.expequiv.ExpandedEquivalence;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface IEMC
@@ -23,7 +24,8 @@ public interface IEMC
 					ingredients.put(ci.getIngredient(), ingredients.get(ci.getIngredient()) + ci.getCount());
 				else
 					ingredients.put(ci.getIngredient(), ci.getCount());
-		if(ingredients.containsKey(null) || ingredients.containsValue(null)) ExpandedEquivalence.LOG.error("Found a NULL ingredient while adding " + out.toString());
+		if(ingredients.containsKey(null) || ingredients.containsValue(null))
+			ExpandedEquivalence.LOG.error("Found a NULL ingredient while adding " + out.toString());
 		if(out.getIngredient() != null && out.getCount() > 0 && !ingredients.isEmpty())
 			ProjectEAPI.getConversionProxy().addConversion(out.getCount(), out.getIngredient(), ingredients);
 	};
@@ -77,6 +79,27 @@ public interface IEMC
 	default void map(FluidStack output, CountedIngredient... ingredients)
 	{
 		map(output, output.amount, ingredients);
+	}
+	
+	//
+	
+	default void multiMap(List<CountedIngredient> output, Collection<CountedIngredient> ingredients)
+	{
+		if(output.isEmpty()) return;
+		if(output.size() == 1)
+		{
+			CountedIngredient out = output.get(0);
+			map(out, ingredients);
+			return;
+		}
+		
+		int total = 0;
+		for(CountedIngredient c : ingredients) total += c.getCount();
+		
+		FakeItem obj = new FakeItem();
+		map(obj, total, ingredients);
+		
+		for(CountedIngredient o : output) map(o, obj.stack(o.getCount()));
 	}
 	
 	//

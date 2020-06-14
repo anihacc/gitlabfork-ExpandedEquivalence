@@ -24,7 +24,7 @@ function CompressionEMCConverter(emc)
     {
         var result = recipe.getResult();
         if(ItemStack.isEmpty(result)) return;
-        var cost = recipe.getCost() / 2;
+        var cost = recipe.getCost();
         var im = Lists.arrayList();
         recipe.getIngredients().forEach(function(i)
         {

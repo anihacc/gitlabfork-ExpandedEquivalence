@@ -67,4 +67,9 @@ public class JSConfigs
 		if(emc > 0)
 			EMCProxyImpl.instance.registerCustomEMC(stack, emc);
 	}
+	
+	public long getEMC(long base, String configKey)
+	{
+		return js.getCfgEMC(base, configKey);
+	}
 }

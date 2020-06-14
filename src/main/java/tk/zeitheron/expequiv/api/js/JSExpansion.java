@@ -19,7 +19,9 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class JSExpansion extends Expansion
 {
@@ -68,7 +70,8 @@ public class JSExpansion extends Expansion
 	{
 		JSConfigs jsc = new JSConfigs(this, getConfig());
 		Internal.setContext(new ExpansionContext(this));
-		invoke("registerEMC", jsc, getConfig());
+		JSCallbackInfo cb = invoke("registerEMC", jsc, getConfig());
+		if(cb.functionExists && cb.error != null) cb.error.printStackTrace();
 		if(getConfig().hasChanged()) getConfig().save();
 	}
 	
@@ -202,6 +205,12 @@ public class JSExpansion extends Expansion
 		public static Logger getLog()
 		{
 			return logger;
+		}
+		
+		public static String toString(Object anything)
+		{
+			if(JSLists.isArray(anything)) return Arrays.toString((Object[]) anything);
+			return Objects.toString(anything);
 		}
 	}
 }

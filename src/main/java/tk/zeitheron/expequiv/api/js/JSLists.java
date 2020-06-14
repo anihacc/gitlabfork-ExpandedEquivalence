@@ -14,6 +14,11 @@ public class JSLists
 		return new ArrayList<>();
 	}
 	
+	public static <T> List<T> arrayList(Collection<T> c)
+	{
+		return new ArrayList<>(c);
+	}
+	
 	public static IntList intList()
 	{
 		return new IntArrayList();
@@ -24,6 +29,15 @@ public class JSLists
 		return new HashSet<>();
 	}
 	
+	public static <T> Set<T> hashSet(Collection<T> c)
+	{
+		return new HashSet<>(c);
+	}
+	
+	public static <K, V> Map<K, V> hashMap() { return new HashMap<>(); }
+	
+	public static <K, V> Map<K, V> hashMap(Map<K, V> m) { return new HashMap<>(m); }
+	
 	public static <T> Stream<T> stream(T[] array) { return Arrays.stream(array); }
 	
 	public static <T> Stream<T> stream(Collection<T> array) { return array.stream(); }
@@ -32,5 +46,10 @@ public class JSLists
 	{
 		if(array instanceof Collection) return stream((Collection<T>) array);
 		else return StreamSupport.stream(array.spliterator(), false);
+	}
+	
+	public static boolean isArray(Object instance)
+	{
+		return instance != null && instance.getClass().isArray();
 	}
 }
