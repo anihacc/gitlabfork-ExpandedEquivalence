@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.List;
+
 public class CountedIngredient
 {
 	private final int count;
@@ -91,6 +93,19 @@ public class CountedIngredient
 		}
 		if(x instanceof Ingredient)
 			return FakeItem.create(emc, (Ingredient) x, 1);
+		if(x instanceof List)
+		{
+			List unawareList = (List) x;
+			if(!unawareList.isEmpty())
+			{
+				Object unawareType = unawareList.get(0);
+				if(unawareType instanceof ItemStack)
+				{
+					List<ItemStack> aware = (List<ItemStack>) unawareList;
+					return FakeItem.create(emc, Ingredient.fromStacks(aware.toArray(new ItemStack[0])), 1);
+				}
+			}
+		}
 		if(x instanceof String)
 			return create(x.toString(), 1);
 		if(x instanceof FluidStack)

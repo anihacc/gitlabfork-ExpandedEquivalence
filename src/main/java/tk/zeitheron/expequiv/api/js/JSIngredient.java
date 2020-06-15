@@ -131,4 +131,10 @@ public class JSIngredient
 	{
 		return decode(defaultEMC, obj);
 	}
+	
+	public static void add(CountedIngredient i, Collection<CountedIngredient> coll)
+	{
+		if(i != null && i.getCount() > 0 && i.getIngredient() != null)
+			coll.add(i);
+	}
 }

@@ -153,6 +153,7 @@ curseforge {
             optionalLibrary 'TechReborn'
             optionalLibrary 'RebornCore'
             optionalLibrary 'Calculator'
+			optionalLibrary 'Extended-Crafting'
         }
 	}
 }
