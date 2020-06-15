@@ -28,15 +28,15 @@ function registerEMC(configs)
 function addMappers(mappers)
 {
     mappers.addMapper("AlloyEMCMapper");
-    mappers.addMapper("ArcEMCConverter");
-    mappers.addMapper("BlastFurnaceEMCConverter");
-    mappers.addMapper("BlueprintEMCConverter");
-    mappers.addMapper("CokeOvenEMCConverter");
-    mappers.addMapper("CrusherEMCConverter");
-    mappers.addMapper("MetalPressEMCConverter");
-    mappers.addMapper("MixerEMCConverter");
+    mappers.addMapper("ArcEMCMapper");
+    mappers.addMapper("BlastFurnaceEMCMapper");
+    mappers.addMapper("BlueprintEMCMapper");
+    mappers.addMapper("CokeOvenEMCMapper");
+    mappers.addMapper("CrusherEMCMapper");
+    mappers.addMapper("MetalPressEMCMapper");
+    mappers.addMapper("MixerEMCMapper");
     mappers.addMapper("RefineryEMCMapper");
-    mappers.addMapper("SqueezerEMCConverter");
+    mappers.addMapper("SqueezerEMCMapper");
 }
 
 function IEStackToIngr(i)
@@ -70,7 +70,7 @@ import blusunrize.immersiveengineering.api.crafting.AlloyRecipe;
     });
 }
 
-function ArcEMCConverter(emc)
+function ArcEMCMapper(emc)
 {
 import blusunrize.immersiveengineering.api.crafting.ArcFurnaceRecipe;
 
@@ -83,7 +83,7 @@ import blusunrize.immersiveengineering.api.crafting.ArcFurnaceRecipe;
     });
 }
 
-function BlastFurnaceEMCConverter(emc)
+function BlastFurnaceEMCMapper(emc)
 {
 import blusunrize.immersiveengineering.api.crafting.BlastFurnaceRecipe;
 
@@ -96,7 +96,7 @@ import blusunrize.immersiveengineering.api.crafting.BlastFurnaceRecipe;
     });
 }
 
-function BlueprintEMCConverter(emc)
+function BlueprintEMCMapper(emc)
 {
 import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
 
@@ -110,7 +110,7 @@ import blusunrize.immersiveengineering.api.crafting.BlueprintCraftingRecipe;
     });
 }
 
-function CokeOvenEMCConverter(emc)
+function CokeOvenEMCMapper(emc)
 {
 import blusunrize.immersiveengineering.api.crafting.CokeOvenRecipe;
 
@@ -123,7 +123,7 @@ import blusunrize.immersiveengineering.api.crafting.CokeOvenRecipe;
     });
 }
 
-function CrusherEMCConverter(emc)
+function CrusherEMCMapper(emc)
 {
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 
@@ -136,7 +136,7 @@ import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
     });
 }
 
-function MetalPressEMCConverter(emc)
+function MetalPressEMCMapper(emc)
 {
 import blusunrize.immersiveengineering.api.crafting.MetalPressRecipe;
 
@@ -149,7 +149,7 @@ import blusunrize.immersiveengineering.api.crafting.MetalPressRecipe;
     });
 }
 
-function MixerEMCConverter(emc)
+function MixerEMCMapper(emc)
 {
 import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 
@@ -178,7 +178,7 @@ import blusunrize.immersiveengineering.api.crafting.RefineryRecipe;
     });
 }
 
-function SqueezerEMCConverter(emc)
+function SqueezerEMCMapper(emc)
 {
 import blusunrize.immersiveengineering.api.crafting.SqueezerRecipe;
 

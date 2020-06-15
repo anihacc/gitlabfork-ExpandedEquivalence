@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tk.zeitheron.expequiv.ExpandedEquivalence;
 import tk.zeitheron.expequiv.InfoEE;
-import tk.zeitheron.expequiv.api.IEMCConverter;
+import tk.zeitheron.expequiv.api.IEMCMapper;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
@@ -111,6 +111,12 @@ public abstract class Expansion
 			}
 			
 			@Override
+			public String getConfigName()
+			{
+				return getName();
+			}
+			
+			@Override
 			public Expansion create(String modid, Configuration config, Object[] args)
 			{
 				try
@@ -212,9 +218,8 @@ public abstract class Expansion
 		return add;
 	}
 	
-	public void getConverters(List<IEMCConverter> mappers)
+	public void getMappers(List<IEMCMapper> list)
 	{
-		
 	}
 	
 	protected Logger log;

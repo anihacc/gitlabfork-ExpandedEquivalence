@@ -40,7 +40,7 @@ function registerEMC(configs, cfgFile)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("MagicalEMCConverter");
+    mappers.addMapper("MagicalEMCMapper");
 }
 
 function getAspectCost(Aspect)
@@ -50,7 +50,7 @@ function getAspectCost(Aspect)
 
 // mappers
 
-function MagicalEMCConverter(emc)
+function MagicalEMCMapper(emc)
 {
     var primordialPearlCost = Data.get("thaumcraft:primordial_pearl");
     var visCrystalCost = Data.get("thaumcraft:vis_crystal");

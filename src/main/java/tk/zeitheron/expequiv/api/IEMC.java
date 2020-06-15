@@ -34,6 +34,18 @@ public interface IEMC
 	
 	//
 	
+	default FakeItem fake(long emc)
+	{
+		FakeItem fake = new FakeItem();
+		register(fake, emc);
+		return fake;
+	}
+	
+	default FakeItem fake()
+	{
+		return new FakeItem();
+	}
+	
 	default void map(ItemStack output, int outCount, Collection<CountedIngredient> ingredients)
 	{
 		map(output, outCount, ingredients.toArray(new CountedIngredient[0]));

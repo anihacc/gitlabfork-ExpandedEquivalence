@@ -14,12 +14,12 @@ function registerEMC(configs, cfgFile)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("RebornCoreEMCConverter");
+    mappers.addMapper("RebornCoreEMCMapper");
 }
 
 // mappers
 
-function RebornCoreEMCConverter(emc)
+function RebornCoreEMCMapper(emc)
 {
     var map = Lists.hashMap();
     var cfgFile = Data.get("reborncore:recipe_types");

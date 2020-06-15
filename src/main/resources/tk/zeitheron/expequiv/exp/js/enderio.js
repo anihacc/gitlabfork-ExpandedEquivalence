@@ -30,10 +30,10 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("AlloySmelterEMCConverter");
-    mappers.addMapper("SliceNSpliceEMCConverter");
-    mappers.addMapper("SAGEMCConverter");
-    mappers.addMapper("VatEMCConverter");
+    mappers.addMapper("AlloySmelterEMCMapper");
+    mappers.addMapper("SliceNSpliceEMCMapper");
+    mappers.addMapper("SAGEMCMapper");
+    mappers.addMapper("VatEMCMapper");
 }
 
 function inputToIngredients(emc, inputs)
@@ -60,21 +60,21 @@ function handleMtO(emc, recipes)
 
 // mappers
 
-function AlloySmelterEMCConverter(emc)
+function AlloySmelterEMCMapper(emc)
 {
 import crazypants.enderio.base.recipe.alloysmelter.AlloyRecipeManager;
 
     handleMtO(emc, AlloyRecipeManager);
 }
 
-function SliceNSpliceEMCConverter(emc)
+function SliceNSpliceEMCMapper(emc)
 {
 import crazypants.enderio.base.recipe.slicensplice.SliceAndSpliceRecipeManager;
 
     handleMtO(emc, SliceAndSpliceRecipeManager);
 }
 
-function SAGEMCConverter(emc)
+function SAGEMCMapper(emc)
 {
 import crazypants.enderio.base.recipe.sagmill.SagMillRecipeManager;
 
@@ -86,7 +86,7 @@ import crazypants.enderio.base.recipe.sagmill.SagMillRecipeManager;
     });
 }
 
-function VatEMCConverter(emc)
+function VatEMCMapper(emc)
 {
 import crazypants.enderio.base.recipe.vat.VatRecipeManager;
 

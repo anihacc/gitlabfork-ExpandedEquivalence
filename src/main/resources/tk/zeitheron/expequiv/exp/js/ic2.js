@@ -44,10 +44,10 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("AdvRecipeEMCConverter");
-    mappers.addMapper("DefaultIC2MachineEMCConverter");
-    mappers.addMapper("ElectrolyzerEMCConverter");
-    mappers.addMapper("FermenterEMCConverter");
+    mappers.addMapper("AdvRecipeEMCMapper");
+    mappers.addMapper("DefaultIC2MachineEMCMapper");
+    mappers.addMapper("ElectrolyzerEMCMapper");
+    mappers.addMapper("FermenterEMCMapper");
 }
 
 import tk.zeitheron.expequiv.api.FakeItem;
@@ -74,7 +74,7 @@ import ic2.api.recipe.Recipes;
 import ic2.core.recipe.AdvRecipe;
 import ic2.core.recipe.AdvShapelessRecipe;
 
-function AdvRecipeEMCConverter(emc)
+function AdvRecipeEMCMapper(emc)
 {
     Vanilla.getCraftingRecipes().forEach(function(recipe)
     {
@@ -90,7 +90,7 @@ function AdvRecipeEMCConverter(emc)
     });
 }
 
-function DefaultIC2MachineEMCConverter(emc)
+function DefaultIC2MachineEMCMapper(emc)
 {
     processDM(emc, Recipes.macerator);
     processDM(emc, Recipes.blastfurnace);
@@ -104,7 +104,7 @@ function DefaultIC2MachineEMCConverter(emc)
     processDM(emc, Recipes.oreWashing);
 }
 
-function ElectrolyzerEMCConverter(emc)
+function ElectrolyzerEMCMapper(emc)
 {
     Recipes.electrolyzer.getRecipeMap().forEach(function(input, recipe)
     {
@@ -123,7 +123,7 @@ function ElectrolyzerEMCConverter(emc)
     });
 }
 
-function FermenterEMCConverter(emc)
+function FermenterEMCMapper(emc)
 {
     Recipes.fermenter.getRecipeMap().forEach(function(input, recipe)
     {

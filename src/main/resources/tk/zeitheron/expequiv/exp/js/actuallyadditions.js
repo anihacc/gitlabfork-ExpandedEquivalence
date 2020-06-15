@@ -28,8 +28,8 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("LaserEMCConverter");
-    mappers.addMapper("EmpowererEMCConverter");
+    mappers.addMapper("LaserEMCMapper");
+    mappers.addMapper("EmpowererEMCMapper");
 }
 
 // mappers
@@ -37,7 +37,7 @@ function addMappers(mappers)
 import de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI;
 import tk.zeitheron.expequiv.api.FakeItem;
 
-function LaserEMCConverter(emc)
+function LaserEMCMapper(emc)
 {
     ActuallyAdditionsAPI.RECONSTRUCTOR_LENS_CONVERSION_RECIPES.forEach(function(recipe)
     {
@@ -51,7 +51,7 @@ function LaserEMCConverter(emc)
     });
 }
 
-function EmpowererEMCConverter(emc)
+function EmpowererEMCMapper(emc)
 {
     ActuallyAdditionsAPI.EMPOWERER_RECIPES.forEach(function(recipe)
     {

@@ -7,7 +7,7 @@ git_commit=https://gitlab.com/Zeitheron/ExpandedEquivalence/commit/{{hash}}
 forge_version=14.23.5.2847
 minecraft_version=1.12.2
 mcp=stable_39
-hl_version=2.0.6.17
+hl_version=2.0.6.19
 jei_version=4.14.1.234
 
 #Mod info

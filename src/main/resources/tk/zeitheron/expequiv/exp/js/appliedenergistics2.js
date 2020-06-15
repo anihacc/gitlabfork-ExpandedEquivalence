@@ -19,15 +19,15 @@ import appeng.api.AEApi;
 
 function addMappers(mappers)
 {
-    mappers.addMapper("GrinderEMCConverter");
-    mappers.addMapper("InscriberEMCConverter");
+    mappers.addMapper("GrinderEMCMapper");
+    mappers.addMapper("InscriberEMCMapper");
 }
 
 // mappers
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
-function GrinderEMCConverter(emc)
+function GrinderEMCMapper(emc)
 {
 import appeng.api.AEApi;
 
@@ -39,7 +39,7 @@ import appeng.api.AEApi;
     });
 }
 
-function InscriberEMCConverter(emc)
+function InscriberEMCMapper(emc)
 {
 import appeng.api.AEApi;
 

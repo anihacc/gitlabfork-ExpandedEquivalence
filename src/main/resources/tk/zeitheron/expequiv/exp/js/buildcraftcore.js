@@ -6,14 +6,14 @@ var mod = "buildcraftcore";
 
 function addMappers(mappers)
 {
-    mappers.addMapper("LaserTableEMCConverter");
+    mappers.addMapper("LaserTableEMCMapper");
 }
 
 // mappers
 
 import tk.zeitheron.expequiv.api.FakeItem;
 
-function LaserTableEMCConverter(emc)
+function LaserTableEMCMapper(emc)
 {
 import buildcraft.lib.recipe.AssemblyRecipeRegistry;
 

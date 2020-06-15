@@ -9,8 +9,8 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("CompressionEMCConverter");
-    mappers.addMapper("ExtremeEMCConverter");
+    mappers.addMapper("CompressionEMCMapper");
+    mappers.addMapper("ExtremeEMCMapper");
 }
 
 // mappers
@@ -18,7 +18,7 @@ function addMappers(mappers)
 import morph.avaritia.recipe.AvaritiaRecipeManager;
 import tk.zeitheron.expequiv.api.FakeItem;
 
-function CompressionEMCConverter(emc)
+function CompressionEMCMapper(emc)
 {
     AvaritiaRecipeManager.COMPRESSOR_RECIPES.values().forEach(function(recipe)
     {
@@ -35,7 +35,7 @@ function CompressionEMCConverter(emc)
     });
 }
 
-function ExtremeEMCConverter(emc)
+function ExtremeEMCMapper(emc)
 {
     AvaritiaRecipeManager.EXTREME_RECIPES.values().forEach(function(recipe)
     {

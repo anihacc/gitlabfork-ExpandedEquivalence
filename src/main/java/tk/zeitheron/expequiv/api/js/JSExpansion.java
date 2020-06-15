@@ -1,6 +1,9 @@
 package tk.zeitheron.expequiv.api.js;
 
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
+import com.zeitheron.hammercore.lib.nashorn.JSCallbackInfo;
+import com.zeitheron.hammercore.lib.nashorn.JSScript;
+import com.zeitheron.hammercore.lib.nashorn.JSSource;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
 import net.minecraft.init.Items;
@@ -12,12 +15,9 @@ import org.apache.logging.log4j.Logger;
 import tk.zeitheron.expequiv.ExpandedEquivalence;
 import tk.zeitheron.expequiv.InfoEE;
 import tk.zeitheron.expequiv.api.IEMC;
-import tk.zeitheron.expequiv.api.IEMCConverter;
+import tk.zeitheron.expequiv.api.IEMCMapper;
 import tk.zeitheron.expequiv.exp.Expansion;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.Arrays;
 import java.util.List;
@@ -25,8 +25,7 @@ import java.util.Objects;
 
 public class JSExpansion extends Expansion
 {
-	public final ScriptEngine engine;
-	public final Invocable invocable;
+	public final JSScript script;
 	
 	public JSExpansion(String modid, Configuration config, Object[] args, JSSource js) throws ScriptException
 	{
@@ -42,9 +41,7 @@ public class JSExpansion extends Expansion
 				.addClassPointer(JSData.class, "Data")
 				.processImports();
 		
-		this.engine = new ScriptEngineManager(null).getEngineByName("nashorn");
-		this.engine.eval(js.read());
-		this.invocable = (Invocable) engine;
+		this.script = new JSScript(js);
 	}
 	
 	public void contruct(int phase)
@@ -76,24 +73,15 @@ public class JSExpansion extends Expansion
 	}
 	
 	@Override
-	public void getConverters(List<IEMCConverter> mappers)
+	public void getMappers(List<IEMCMapper> list)
 	{
 		Internal.setContext(new ExpansionContext(this));
-		invoke("addMappers", new MapperAcceptor(mappers, this));
+		invoke("addMappers", new MapperAcceptor(list, this));
 	}
 	
 	public JSCallbackInfo invoke(String fun, Object... args)
 	{
-		try
-		{
-			return new JSCallbackInfo(invocable.invokeFunction(fun, args));
-		} catch(NoSuchMethodException e)
-		{
-			return new JSCallbackInfo(false, false, e);
-		} catch(Throwable e)
-		{
-			return new JSCallbackInfo(true, false, e);
-		}
+		return script.callFunction(fun, args);
 	}
 	
 	@Override
@@ -105,10 +93,10 @@ public class JSExpansion extends Expansion
 	
 	public static class MapperAcceptor
 	{
-		final List<IEMCConverter> converters;
+		final List<IEMCMapper> converters;
 		final JSExpansion expansion;
 		
-		public MapperAcceptor(List<IEMCConverter> converters, JSExpansion expansion)
+		public MapperAcceptor(List<IEMCMapper> converters, JSExpansion expansion)
 		{
 			this.converters = converters;
 			this.expansion = expansion;
@@ -116,14 +104,14 @@ public class JSExpansion extends Expansion
 		
 		public void addMapper(String fun)
 		{
-			converters.add(new JSEMCConverter(fun));
+			converters.add(new JSEMCMapper(fun));
 		}
 		
-		public class JSEMCConverter implements IEMCConverter
+		public class JSEMCMapper implements IEMCMapper
 		{
 			final String func;
 			
-			public JSEMCConverter(String func)
+			public JSEMCMapper(String func)
 			{
 				this.func = func;
 			}

@@ -6,14 +6,14 @@ var mod = "compactmachines3";
 
 function addMappers(mappers)
 {
-    mappers.addMapper("MiniaturizationEMCConverter");
+    mappers.addMapper("MiniaturizationEMCMapper");
 }
 
 // mappers
 
 import tk.zeitheron.expequiv.api.FakeItem;
 
-function MiniaturizationEMCConverter(emc)
+function MiniaturizationEMCMapper(emc)
 {
 import org.dave.compactmachines3.miniaturization.MultiblockRecipes;
 

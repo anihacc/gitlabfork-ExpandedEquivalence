@@ -15,12 +15,12 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("CropEMCConverter");
+    mappers.addMapper("CropEMCMapper");
 }
 
 // mappers
 
-function CropEMCConverter(emc)
+function CropEMCMapper(emc)
 {
     var stuff = getItem(mod, "stuff");
 

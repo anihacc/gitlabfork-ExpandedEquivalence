@@ -23,10 +23,10 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("ManaPoolEMCConverter");
-    mappers.addMapper("ElvenTradeEMCConverter");
-    mappers.addMapper("PureDaisyEMCConverter");
-    mappers.addMapper("TerrestrialEMCConverter");
+    mappers.addMapper("ManaPoolEMCMapper");
+    mappers.addMapper("ElvenTradeEMCMapper");
+    mappers.addMapper("PureDaisyEMCMapper");
+    mappers.addMapper("TerrestrialEMCMapper");
 }
 
 // mappers
@@ -34,7 +34,7 @@ function addMappers(mappers)
 import tk.zeitheron.expequiv.api.FakeItem;
 import vazkii.botania.api.BotaniaAPI;
 
-function ManaPoolEMCConverter(emc)
+function ManaPoolEMCMapper(emc)
 {
     BotaniaAPI.manaInfusionRecipes.forEach(function(recipe)
     {
@@ -53,7 +53,7 @@ function ManaPoolEMCConverter(emc)
     });
 }
 
-function ElvenTradeEMCConverter(emc)
+function ElvenTradeEMCMapper(emc)
 {
     BotaniaAPI.elvenTradeRecipes.forEach(function(recipe)
     {
@@ -68,7 +68,7 @@ function ElvenTradeEMCConverter(emc)
     });
 }
 
-function PureDaisyEMCConverter(emc)
+function PureDaisyEMCMapper(emc)
 {
     BotaniaAPI.pureDaisyRecipes.forEach(function(recipe)
     {
@@ -80,7 +80,7 @@ function PureDaisyEMCConverter(emc)
     });
 }
 
-function TerrestrialEMCConverter(emc)
+function TerrestrialEMCMapper(emc)
 {
 import vazkii.botania.common.item.ModItems;
     var out = Ingredient.of(ItemStack.of(ModItems.manaResource, 1, 4));

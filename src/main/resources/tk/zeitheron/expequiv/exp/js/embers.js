@@ -15,15 +15,15 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("StamperEMCConverter");
-    mappers.addMapper("AlchemyEMCConverter");
+    mappers.addMapper("StamperEMCMapper");
+    mappers.addMapper("AlchemyEMCMapper");
 }
 
 // mappers
 
 import teamroots.embers.recipe.RecipeRegistry;
 
-function StamperEMCConverter(emc)
+function StamperEMCMapper(emc)
 {
     RecipeRegistry.stampingRecipes.forEach(function(recipe)
     {
@@ -34,7 +34,7 @@ function StamperEMCConverter(emc)
     });
 }
 
-function AlchemyEMCConverter(emc)
+function AlchemyEMCMapper(emc)
 {
     RecipeRegistry.alchemyRecipes.forEach(function(recipe)
     {

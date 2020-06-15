@@ -2,6 +2,7 @@ package tk.zeitheron.expequiv;
 
 import com.zeitheron.hammercore.HammerCore;
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
+import com.zeitheron.hammercore.lib.nashorn.JSSource;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.impl.EMCProxyImpl;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,9 +16,8 @@ import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tk.zeitheron.expequiv.api.IEMC;
-import tk.zeitheron.expequiv.api.IEMCConverter;
+import tk.zeitheron.expequiv.api.IEMCMapper;
 import tk.zeitheron.expequiv.api.js.JSExpansion;
-import tk.zeitheron.expequiv.api.js.JSSource;
 import tk.zeitheron.expequiv.exp.Expansion;
 import tk.zeitheron.expequiv.exp.ExpansionReg;
 
@@ -60,7 +60,7 @@ public class ExpandedEquivalence
 		{
 			String name;
 			bar.step(name = Loader.instance().getIndexedModList().get(mod).getName());
-			JSSource src = JSSource.fromLocalResource("tk/zeitheron/expequiv/exp/js/" + mod + ".js");
+			JSSource src = JSSource.fromLocalResource(ExpandedEquivalence.class, "tk/zeitheron/expequiv/exp/js/" + mod + ".js");
 			if(src.exists())
 			{
 				Expansion.IExpansionFactory factory = new Expansion.IExpansionFactory()
@@ -176,9 +176,9 @@ public class ExpandedEquivalence
 	{
 		instance.expansions.forEach(ex ->
 		{
-			List<IEMCConverter> mappers = new ArrayList<>();
-			ex.getConverters(mappers);
-			for(IEMCConverter m : mappers)
+			List<IEMCMapper> mappers = new ArrayList<>();
+			ex.getMappers(mappers);
+			for(IEMCMapper m : mappers)
 			{
 				try
 				{

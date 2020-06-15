@@ -26,17 +26,17 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("CarpenterEMCConverter");
-    mappers.addMapper("ThermionicEMCConverter");
-    mappers.addMapper("MoistenerEMCConverter");
-    mappers.addMapper("SqueezerEMCConverter");
-    mappers.addMapper("StillEMCConverter");
+    mappers.addMapper("CarpenterEMCMapper");
+    mappers.addMapper("ThermionicEMCMapper");
+    mappers.addMapper("MoistenerEMCMapper");
+    mappers.addMapper("SqueezerEMCMapper");
+    mappers.addMapper("StillEMCMapper");
 }
 
 // mappers
 import forestry.api.recipes.RecipeManagers;
 
-function CarpenterEMCConverter(emc)
+function CarpenterEMCMapper(emc)
 {
     RecipeManagers.carpenterManager.recipes().forEach(function(recipe)
     {
@@ -51,7 +51,7 @@ function CarpenterEMCConverter(emc)
     });
 }
 
-function ThermionicEMCConverter(emc)
+function ThermionicEMCMapper(emc)
 {
     RecipeManagers.fabricatorManager.recipes().forEach(function(recipe)
     {
@@ -69,7 +69,7 @@ function ThermionicEMCConverter(emc)
     });
 }
 
-function MoistenerEMCConverter(emc)
+function MoistenerEMCMapper(emc)
 {
     RecipeManagers.moistenerManager.recipes().forEach(function(recipe)
     {
@@ -78,7 +78,7 @@ function MoistenerEMCConverter(emc)
     });
 }
 
-function SqueezerEMCConverter(emc)
+function SqueezerEMCMapper(emc)
 {
     RecipeManagers.squeezerManager.recipes().forEach(function(recipe)
     {
@@ -86,7 +86,7 @@ function SqueezerEMCConverter(emc)
     });
 }
 
-function StillEMCConverter(emc)
+function StillEMCMapper(emc)
 {
     RecipeManagers.stillManager.recipes().forEach(function(recipe)
     {

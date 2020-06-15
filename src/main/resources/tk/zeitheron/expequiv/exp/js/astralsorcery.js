@@ -21,8 +21,8 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("AltarEMCConverter");
-    mappers.addMapper("StarlightInfusionEMCConverter");
+    mappers.addMapper("AltarEMCMapper");
+    mappers.addMapper("StarlightInfusionEMCMapper");
 }
 
 // mappers
@@ -31,7 +31,7 @@ import tk.zeitheron.expequiv.api.FakeItem;
 import hellfirepvp.astralsorcery.common.crafting.altar.AltarRecipeRegistry;
 import hellfirepvp.astralsorcery.common.crafting.infusion.InfusionRecipeRegistry;
 
-function AltarEMCConverter(emc)
+function AltarEMCMapper(emc)
 {
     var recipes = Lists.hashSet();
     AltarRecipeRegistry.recipes.values().forEach(function(f) { recipes.addAll(f); });
@@ -56,7 +56,7 @@ function AltarEMCConverter(emc)
     });
 }
 
-function StarlightInfusionEMCConverter(emc)
+function StarlightInfusionEMCMapper(emc)
 {
     var recipes = Lists.hashSet();
     recipes.addAll(InfusionRecipeRegistry.recipes);

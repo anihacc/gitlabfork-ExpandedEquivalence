@@ -2,7 +2,7 @@ package tk.zeitheron.expequiv.api;
 
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 
-public interface IEMCConverter
+public interface IEMCMapper
 {
 	void register(IEMC emc, Configuration cfg);
 	

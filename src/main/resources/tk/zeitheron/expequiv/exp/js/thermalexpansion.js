@@ -26,21 +26,21 @@ var mod = "thermalexpansion"
 
 function addMappers(mappers)
 {
-    mappers.addMapper("BrewerEMCConverter");
-    mappers.addMapper("CentrifugeEMCConverter");
-    mappers.addMapper("ChargerEMCConverter");
-    mappers.addMapper("CompactorEMCConverter");
-    mappers.addMapper("CrucibleEMCConverter");
-    mappers.addMapper("EnchanterEMCConverter");
-    mappers.addMapper("ExtruderEMCConverter");
-    mappers.addMapper("FurnaceEMCConverter");
-    mappers.addMapper("InsolatorEMCConverter");
-    mappers.addMapper("PrecipitatorEMCConverter");
-    mappers.addMapper("PulverizerEMCConverter");
-    mappers.addMapper("RefineryEMCConverter");
-    mappers.addMapper("SawmillEMCConverter");
-    mappers.addMapper("SmelterEMCConverter");
-    mappers.addMapper("TransposerEMCConverter");
+    mappers.addMapper("BrewerEMCMapper");
+    mappers.addMapper("CentrifugeEMCMapper");
+    mappers.addMapper("ChargerEMCMapper");
+    mappers.addMapper("CompactorEMCMapper");
+    mappers.addMapper("CrucibleEMCMapper");
+    mappers.addMapper("EnchanterEMCMapper");
+    mappers.addMapper("ExtruderEMCMapper");
+    mappers.addMapper("FurnaceEMCMapper");
+    mappers.addMapper("InsolatorEMCMapper");
+    mappers.addMapper("PrecipitatorEMCMapper");
+    mappers.addMapper("PulverizerEMCMapper");
+    mappers.addMapper("RefineryEMCMapper");
+    mappers.addMapper("SawmillEMCMapper");
+    mappers.addMapper("SmelterEMCMapper");
+    mappers.addMapper("TransposerEMCMapper");
 }
 
 function $(array) { return Lists.stream(array); }
@@ -57,7 +57,7 @@ function inout(emc, list)
 
 // mappers
 
-function BrewerEMCConverter(emc)
+function BrewerEMCMapper(emc)
 {
     $(BrewerManager.getRecipeList()).forEach(function(recipe)
     {
@@ -68,7 +68,7 @@ function BrewerEMCConverter(emc)
     });
 }
 
-function CentrifugeEMCConverter(emc)
+function CentrifugeEMCMapper(emc)
 {
     $(CentrifugeManager.getRecipeList()).forEach(function(recipe)
     {
@@ -88,12 +88,12 @@ function CentrifugeEMCConverter(emc)
     });
 }
 
-function ChargerEMCConverter(emc)
+function ChargerEMCMapper(emc)
 {
     inout(emc, ChargerManager);
 }
 
-function CompactorEMCConverter(emc)
+function CompactorEMCMapper(emc)
 {
     Lists.stream(CompactorManager.Mode.values()).forEach(function(mode)
     {
@@ -104,12 +104,12 @@ function CompactorEMCConverter(emc)
     });
 }
 
-function CrucibleEMCConverter(emc)
+function CrucibleEMCMapper(emc)
 {
     inout(emc, CrucibleManager);
 }
 
-function EnchanterEMCConverter(emc)
+function EnchanterEMCMapper(emc)
 {
     $(EnchanterManager.getRecipeList()).forEach(function(recipe)
     {
@@ -120,7 +120,7 @@ function EnchanterEMCConverter(emc)
     });
 }
 
-function ExtruderEMCConverter(emc)
+function ExtruderEMCMapper(emc)
 {
     var extrude = function(b)
     {
@@ -137,7 +137,7 @@ function ExtruderEMCConverter(emc)
     extrude(false);
 }
 
-function FurnaceEMCConverter(emc)
+function FurnaceEMCMapper(emc)
 {
     $(FurnaceManager.getRecipeList(false)).forEach(function(recipe)
     {
@@ -153,7 +153,7 @@ function FurnaceEMCConverter(emc)
     });
 }
 
-function InsolatorEMCConverter(emc)
+function InsolatorEMCMapper(emc)
 {
     $(InsolatorManager.getRecipeList()).forEach(function(recipe)
     {
@@ -161,12 +161,12 @@ function InsolatorEMCConverter(emc)
     });
 }
 
-function PrecipitatorEMCConverter(emc)
+function PrecipitatorEMCMapper(emc)
 {
     inout(emc, PrecipitatorManager);
 }
 
-function PulverizerEMCConverter(emc)
+function PulverizerEMCMapper(emc)
 {
     $(PulverizerManager.getRecipeList()).forEach(function(recipe)
     {
@@ -174,7 +174,7 @@ function PulverizerEMCConverter(emc)
     });
 }
 
-function RefineryEMCConverter(emc)
+function RefineryEMCMapper(emc)
 {
     $(RefineryManager.getRecipeList()).forEach(function(recipe)
     {
@@ -182,7 +182,7 @@ function RefineryEMCConverter(emc)
     });
 }
 
-function SawmillEMCConverter(emc)
+function SawmillEMCMapper(emc)
 {
     $(SawmillManager.getRecipeList()).forEach(function(recipe)
     {
@@ -190,7 +190,7 @@ function SawmillEMCConverter(emc)
     });
 }
 
-function SmelterEMCConverter(emc)
+function SmelterEMCMapper(emc)
 {
     $(SmelterManager.getRecipeList()).forEach(function(recipe)
     {
@@ -198,7 +198,7 @@ function SmelterEMCConverter(emc)
     });
 }
 
-function TransposerEMCConverter(emc)
+function TransposerEMCMapper(emc)
 {
     $(TransposerManager.getFillRecipeList()).forEach(function(recipe)
     {

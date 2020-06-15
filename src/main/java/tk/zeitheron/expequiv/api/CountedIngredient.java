@@ -1,5 +1,10 @@
 package tk.zeitheron.expequiv.api;
 
+import com.zeitheron.hammercore.api.EnergyUnit;
+import com.zeitheron.hammercore.api.crafting.IBaseIngredient;
+import com.zeitheron.hammercore.api.crafting.IEnergyIngredient;
+import com.zeitheron.hammercore.api.crafting.IFluidIngredient;
+import com.zeitheron.hammercore.api.crafting.IItemIngredient;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -8,6 +13,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CountedIngredient
 {
@@ -83,16 +89,20 @@ public class CountedIngredient
 	{
 		if(x instanceof ItemStack)
 			return create((ItemStack) x);
+		
 		if(x instanceof Item)
 			return create((Item) x, 1);
+		
 		if(x instanceof Block)
 		{
 			Item blk = Item.getItemFromBlock((Block) x);
 			if(blk != Items.AIR) return create(blk, 1);
 			else return null;
 		}
+		
 		if(x instanceof Ingredient)
 			return FakeItem.create(emc, (Ingredient) x, 1);
+		
 		if(x instanceof List)
 		{
 			List unawareList = (List) x;
@@ -102,14 +112,46 @@ public class CountedIngredient
 				if(unawareType instanceof ItemStack)
 				{
 					List<ItemStack> aware = (List<ItemStack>) unawareList;
-					return FakeItem.create(emc, Ingredient.fromStacks(aware.toArray(new ItemStack[0])), 1);
+					return tryCreate(emc, Ingredient.fromStacks(aware.toArray(new ItemStack[0])));
 				}
 			}
 		}
+		
 		if(x instanceof String)
 			return create(x.toString(), 1);
+		
 		if(x instanceof FluidStack)
 			return create((FluidStack) x);
+		
+		// Add native HammerCore support
+		if(x instanceof IBaseIngredient)
+		{
+			IBaseIngredient base = (IBaseIngredient) x;
+			
+			if(base instanceof IItemIngredient)
+			{
+				IItemIngredient item = (IItemIngredient) base;
+				return tryCreate(emc, item.asIngredient());
+			}
+			
+			if(base instanceof IFluidIngredient)
+			{
+				IFluidIngredient fluid = (IFluidIngredient) base;
+				List<FluidStack> matching = fluid.asIngredient();
+				List<CountedIngredient> inputs = matching.stream().map(CountedIngredient::create).collect(Collectors.toList());
+				FakeItem all = emc.fake();
+				emc.map(all.stack(1), inputs);
+				return all.stack(1);
+			}
+			
+			if(base instanceof IEnergyIngredient)
+			{
+				IEnergyIngredient energy = (IEnergyIngredient) base;
+				long emcv = (long) Math.ceil(EnergyUnit.EMC.convertFrom(energy.getAmount().doubleValue(), energy.getUnit()));
+				return emc.fake(emcv).stack(1);
+			}
+		}
+		
 		return null;
 	}
 	

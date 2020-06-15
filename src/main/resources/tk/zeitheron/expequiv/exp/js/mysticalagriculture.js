@@ -22,12 +22,12 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("SeedReprocessorEMCConverter");
+    mappers.addMapper("SeedReprocessorEMCMapper");
 }
 
 // mappers
 
-function SeedReprocessorEMCConverter(emc)
+function SeedReprocessorEMCMapper(emc)
 {
     ReprocessorManager.getRecipes().forEach(function(recipe)
     {

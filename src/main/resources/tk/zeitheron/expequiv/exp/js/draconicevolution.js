@@ -13,12 +13,12 @@ function registerEMC(configs)
 
 function addMappers(mappers)
 {
-    mappers.addMapper("FusionEMCConverter");
+    mappers.addMapper("FusionEMCMapper");
 }
 
 // mappers
 
-function FusionEMCConverter(emc)
+function FusionEMCMapper(emc)
 {
 import com.brandon3055.draconicevolution.api.fusioncrafting.FusionRecipeAPI;
 
