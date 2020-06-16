@@ -8,11 +8,18 @@ import com.zeitheron.hammercore.api.crafting.IItemIngredient;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.PotionType;
+import net.minecraft.potion.PotionUtils;
 import net.minecraftforge.fluids.FluidStack;
+import tk.zeitheron.expequiv.api.js.JSData;
+import tk.zeitheron.expequiv.api.js.JSLists;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CountedIngredient
@@ -45,6 +52,37 @@ public class CountedIngredient
 	{
 		if(stack.isEmpty() || count < 1)
 			return null;
+		
+		IEMC emc = IEMC.PE_WRAPPER;
+		
+		if(stack.getItem() instanceof ItemPotion)
+		{
+			PotionType type = PotionUtils.getPotionFromItem(stack);
+			Map<PotionType, Long> costs = (Map<PotionType, Long>) JSData.get("minecraft:potion_type_costs");
+			if(costs != null && costs.containsKey(type))
+			{
+				long emcv = costs.get(type);
+				List<CountedIngredient> ci = JSLists.arrayList();
+				ci.add(emc.fake(emcv).stack(1));
+				
+				ci.add(create(new ItemStack(Items.GLASS_BOTTLE)));
+				
+				if(stack.getItem() == Items.SPLASH_POTION)
+				{
+					ci.add(create(new ItemStack(Items.GUNPOWDER)));
+				}
+				
+				if(stack.getItem() == Items.LINGERING_POTION)
+				{
+					ci.add(create(new ItemStack(Items.DRAGON_BREATH)));
+				}
+				
+				FakeItem out = emc.fake();
+				emc.map(out.stack(1), ci);
+				return out.stack(count);
+			}
+		}
+		
 		return new CountedIngredient(count, stack.copy().splitStack(1));
 	}
 	
@@ -105,16 +143,15 @@ public class CountedIngredient
 		
 		if(x instanceof List)
 		{
-			List unawareList = (List) x;
-			if(!unawareList.isEmpty())
-			{
-				Object unawareType = unawareList.get(0);
-				if(unawareType instanceof ItemStack)
-				{
-					List<ItemStack> aware = (List<ItemStack>) unawareList;
-					return tryCreate(emc, Ingredient.fromStacks(aware.toArray(new ItemStack[0])));
-				}
-			}
+			List<?> unawareList = (List) x;
+			List<CountedIngredient> inputs = unawareList
+					.stream()
+					.map(o -> tryCreate(emc, o))
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
+			CountedIngredient out = emc.fake().stack(1);
+			emc.map(out, inputs);
+			return out;
 		}
 		
 		if(x instanceof String)

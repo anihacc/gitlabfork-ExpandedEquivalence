@@ -36,6 +36,11 @@ public abstract class Expansion
 		this.modid = modid;
 	}
 	
+	public boolean shouldBeEnabled()
+	{
+		return true;
+	}
+	
 	protected final Map<String, ConfigEMCValue> cfgEmc = new HashMap<>();
 	private List<ConfigEMCValue> values;
 	
@@ -155,6 +160,12 @@ public abstract class Expansion
 					if(ex == null)
 					{
 						ExpandedEquivalence.LOG.warn("Failed to load expansion from factory " + c.getName() + ", skipping.");
+						continue;
+					}
+					
+					if(!ex.shouldBeEnabled())
+					{
+						ExpandedEquivalence.LOG.info("Expansion from factory " + c.getName() + " disabled by it's own logic state handler. It is NOT critical, do not report.");
 						continue;
 					}
 					

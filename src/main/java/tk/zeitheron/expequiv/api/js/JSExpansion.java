@@ -2,7 +2,6 @@ package tk.zeitheron.expequiv.api.js;
 
 import com.zeitheron.hammercore.cfg.file1132.Configuration;
 import com.zeitheron.hammercore.lib.nashorn.JSCallbackInfo;
-import com.zeitheron.hammercore.lib.nashorn.JSScript;
 import com.zeitheron.hammercore.lib.nashorn.JSSource;
 import moze_intel.projecte.api.proxy.IEMCProxy;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
@@ -18,6 +17,9 @@ import tk.zeitheron.expequiv.api.IEMC;
 import tk.zeitheron.expequiv.api.IEMCMapper;
 import tk.zeitheron.expequiv.exp.Expansion;
 
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +27,8 @@ import java.util.Objects;
 
 public class JSExpansion extends Expansion
 {
-	public final JSScript script;
+	public final ScriptEngine engine;
+	public final Invocable invocable;
 	
 	public JSExpansion(String modid, Configuration config, Object[] args, JSSource js) throws ScriptException
 	{
@@ -41,7 +44,47 @@ public class JSExpansion extends Expansion
 				.addClassPointer(JSData.class, "Data")
 				.processImports();
 		
-		this.script = new JSScript(js);
+		
+		this.engine = new ScriptEngineManager(null).getEngineByName("nashorn");
+		this.engine.eval(js.read());
+		this.invocable = (Invocable) engine;
+	}
+	
+	public JSCallbackInfo invoke(String fun, Object... args)
+	{
+		try
+		{
+			return new JSCallbackInfo(invocable.invokeFunction(fun, args));
+		} catch(NoSuchMethodException e)
+		{
+			return new JSCallbackInfo(false, false, e);
+		} catch(Throwable e)
+		{
+			return new JSCallbackInfo(true, false, e);
+		}
+	}
+	
+	@Override
+	public boolean shouldBeEnabled()
+	{
+		Object func = invoke("shouldBeEnabled").returned;
+		
+		if(func != null)
+		{
+			boolean bool = true;
+			try
+			{
+				getLogger().info("Found logical state handler, checking it out...");
+				bool = ((Boolean) func).booleanValue();
+			} catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+			getLogger().info("Logical state handler has decided that this extension is going to be " + (bool ? "enabled" : "disabled"));
+			return bool;
+		}
+		
+		return true;
 	}
 	
 	public void contruct(int phase)
@@ -77,11 +120,6 @@ public class JSExpansion extends Expansion
 	{
 		Internal.setContext(new ExpansionContext(this));
 		invoke("addMappers", new MapperAcceptor(list, this));
-	}
-	
-	public JSCallbackInfo invoke(String fun, Object... args)
-	{
-		return script.callFunction(fun, args);
 	}
 	
 	@Override
