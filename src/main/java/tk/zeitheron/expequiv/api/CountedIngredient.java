@@ -5,6 +5,7 @@ import com.zeitheron.hammercore.api.crafting.IBaseIngredient;
 import com.zeitheron.hammercore.api.crafting.IEnergyIngredient;
 import com.zeitheron.hammercore.api.crafting.IFluidIngredient;
 import com.zeitheron.hammercore.api.crafting.IItemIngredient;
+import com.zeitheron.hammercore.utils.charging.fe.FECharge;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -159,6 +160,12 @@ public class CountedIngredient
 		
 		if(x instanceof FluidStack)
 			return create((FluidStack) x);
+		
+		if(x instanceof FECharge)
+		{
+			long emcv = (long) Math.ceil(EnergyUnit.EMC.convertFrom(((FECharge) x).FE, EnergyUnit.FE));
+			return emc.fake(emcv).stack(1);
+		}
 		
 		// Add native HammerCore support
 		if(x instanceof IBaseIngredient)
